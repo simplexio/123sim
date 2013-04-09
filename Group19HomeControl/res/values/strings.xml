@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GroupHomeControl</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_device">Device Activity</string>
+    <string name="connect_on_launch">Connect On Launch</string>
+    <string name="server_settings">Server Settings</string>
+    <string name="connect_on_launch_summary">Connect On Launch</string>
+    <string name="Checked">Checked</string>
+    <string name="Unchecked">Unchecked</string>
+    <string name="Unit_address">Central Unit Address</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+</resources>

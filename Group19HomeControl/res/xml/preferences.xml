@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+        android:id="@+id/server_settings"
+        android:title="@string/server_settings" 
+        android:summary="@string/connect_on_launch_summary">
+                
+    </PreferenceCategory>
+    
+    <CheckBoxPreference 
+        android:key="connect_to_server_check"
+        android:defaultValue="true"
+        android:summaryOn="@string/Checked"
+        android:summaryOff="@string/Unchecked" />
+   
+    <EditTextPreference 
+        android:key="server_address"
+        android:defaultValue=""
+        android:dialogTitle="@string/Unit_address" />
+    
+
+</PreferenceScreen>
