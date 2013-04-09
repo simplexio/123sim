@@ -43,14 +43,9 @@ public class DeviceListActivity extends ListActivity {
 
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
-
-		Device device = (Device)DeviceAdapter.getInstance().getItem(position);
-		if (null != device) {
 			Intent intent = new Intent(this, SettingsActivity.class);
-			intent.putExtra(DeviceActivity.KEY_DEVICE_NAME, device.getName());
 			this.startActivity(intent);
-		}
-		return false;
+			return false;
 	}
 
 }
