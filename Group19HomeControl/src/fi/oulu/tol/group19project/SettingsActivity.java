@@ -20,9 +20,7 @@ public class SettingsActivity extends Activity {
 		settingsFragment = new SettingsFragment();
 
 		// Display the fragment as the main content.
-		getFragmentManager().beginTransaction()
-		.replace(android.R.id.content, settingsFragment)
-		.commit();
+		getFragmentManager().beginTransaction().replace(android.R.id.content, settingsFragment).commit();
 	}
 
 	public static class SettingsFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
@@ -51,6 +49,7 @@ public class SettingsActivity extends Activity {
 				preference.setSummary(pref.getString(key, ""));
 			}
 		}
+		
 		public void onPause(SharedPreferences sharedPref, OnSharedPreferenceChangeListener listener) {
 			sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
 		}

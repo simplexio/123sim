@@ -1,8 +1,5 @@
 package fi.oulu.tol.group19project;
 
-import fi.oulu.tol.group19project.R;
-import fi.oulu.tol.group19project.R.layout;
-import fi.oulu.tol.group19project.R.menu;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;

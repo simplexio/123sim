@@ -1,11 +1,6 @@
 package fi.oulu.tol.group19project;
 
 import java.util.Vector;
-
-import fi.oulu.tol.group19project.DeviceAdapter.ViewHolder;
-import fi.oulu.tol.group19project.R;
-import fi.oulu.tol.group19project.Device.Type;
-
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,9 +68,9 @@ public class DeviceAdapter extends BaseAdapter {
 			// but have to inflate one from the xml layout file. Inflate the 
 			// sensor row layout, if the type of v is Type.SENSOR, else if it is 
 			// Type.ACTUATOR, then inflate the xml layout for the actuator.
-			if (v.getType() == Type.SENSOR) {
+			if (v.getType() == Device.Type.SENSOR) {
 				convertView = mInflater.inflate(R.layout.row_sensor_layout, null); 
-			} else if (v.getType() == Type.ACTUATOR) {
+			} else if (v.getType() == Device.Type.ACTUATOR) {
 				convertView = mInflater.inflate(R.layout.row_actuator_layout, null); 
 			} else {
 				// should not be possible! Throw an exception?
@@ -148,18 +143,12 @@ public class DeviceAdapter extends BaseAdapter {
 
 	public Device getDevice(String name) {
 		return null;
-		//for (int counter = 0; counter < names.length; counter++) {
-		//	devices.add(new Device(types[counter], names[counter], descriptions[counter]));
-		/*int position;
-		ViewHolder holder;
-		holder.nameView = holder.getName();
-		Device v = devices.get(position);
-		for (int i=0; i ; i++) {
+
 			
 			
-		}*/
+		}
 		
-	}
+	
 
 	@Override
 	public long getItemId(int arg0) {

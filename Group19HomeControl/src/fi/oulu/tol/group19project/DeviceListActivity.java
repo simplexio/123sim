@@ -1,6 +1,5 @@
 package fi.oulu.tol.group19project;
 
-import fi.oulu.tol.group19project.R;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.ListActivity;
@@ -52,7 +51,5 @@ public class DeviceListActivity extends ListActivity {
 		}
 		return false;
 	}
-
-
 
 }
