@@ -49,17 +49,15 @@ public class SettingsActivity extends Activity {
 				preference.setSummary(pref.getString(key, ""));
 			}
 		}
-		
-		public void onPause(SharedPreferences sharedPref, OnSharedPreferenceChangeListener listener) {
-			sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
-		}
-		
-		public void onResume() {
-			SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-			sharedPref.registerOnSharedPreferenceChangeListener(settingsFragment);
-		}
-
+	
 	}
-
+	public void onPause(SharedPreferences sharedPref, OnSharedPreferenceChangeListener listener) {
+		sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
+	}
+	
+	public void onResume() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		sharedPref.registerOnSharedPreferenceChangeListener(settingsFragment);
+	}
 
 }

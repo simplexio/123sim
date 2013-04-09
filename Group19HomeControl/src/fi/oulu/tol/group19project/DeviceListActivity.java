@@ -40,13 +40,14 @@ public class DeviceListActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.device_list, menu);
 		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
 
 		Device device = (Device)DeviceAdapter.getInstance().getItem(position);
 		if (null != device) {
 			Intent intent = new Intent(this, SettingsActivity.class);
-			intent.putExtra(SettingsActivity.KEY_DEVICE_NAME, device.getName());
+			intent.putExtra(DeviceActivity.KEY_DEVICE_NAME, device.getName());
 			this.startActivity(intent);
 		}
 		return false;

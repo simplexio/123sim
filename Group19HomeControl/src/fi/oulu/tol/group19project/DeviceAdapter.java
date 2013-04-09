@@ -1,6 +1,8 @@
 package fi.oulu.tol.group19project;
 
 import java.util.Vector;
+
+import fi.oulu.tol.group19project.Device.Type;
 import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,17 +48,13 @@ public class DeviceAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		return devices.size();
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public Object getItem(int position) {
 		Device v = devices.get(position);
 		return v;
-
 	}
-
-
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -99,7 +97,6 @@ public class DeviceAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-
 	@Override
 	public int getViewTypeCount() {
 		return 2; // we have two different view types (rows).
@@ -113,7 +110,6 @@ public class DeviceAdapter extends BaseAdapter {
 			return 1;  // the type one is the actuator row view for actuator objects.
 		}
 	}
-
 
 	private class ViewHolder {
 		private View row;
@@ -137,25 +133,15 @@ public class DeviceAdapter extends BaseAdapter {
 			}
 			return descriptionView;
 		}
-
 	}
-
 
 	public Device getDevice(String name) {
 		return null;
-
-			
-			
-		}
-		
-	
+	}
 
 	@Override
 	public long getItemId(int arg0) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-
 }
