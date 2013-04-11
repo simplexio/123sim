@@ -54,7 +54,7 @@ public static final int DEBUG = 3;
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
 
-		Intent intent = new Intent(this, DeviceActivity.class);
+		Intent intent = new Intent(this, SettingsActivity.class);
 		this.startActivity(intent);
 		return false;
 	}
