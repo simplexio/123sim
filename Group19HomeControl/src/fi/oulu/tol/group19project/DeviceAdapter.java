@@ -3,11 +3,9 @@ package fi.oulu.tol.group19project;
 import java.util.Vector;
 
 import fi.oulu.tol.group19project.Device.Type;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -136,6 +134,12 @@ public class DeviceAdapter extends BaseAdapter {
 	}
 
 	public Device getDevice(String name) {
+		for(int i=0; i<devices.size(); i++) {
+			if(devices.get(i).getName().equals(name)) {
+				return devices.get(i);
+			}
+			
+		}
 		return null;
 	}
 
