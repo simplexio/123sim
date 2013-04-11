@@ -17,10 +17,10 @@ import android.view.View;
 import android.widget.ListView;
 
 public class DeviceListActivity extends ListActivity {
-	
 
-private static final String TAG = "Group19HomeControl";
-public static final int DEBUG = 3;
+
+	private static final String TAG = "Group19HomeControl";
+	public static final int DEBUG = 3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public static final int DEBUG = 3;
 		this.startActivity(intent);
 		return false;
 	}
-	
+
 
 	@Override
 	protected void onStart() {
@@ -68,51 +68,46 @@ public static final int DEBUG = 3;
 	@Override
 	protected void onStop() {
 		super.onStop();
-		 new CountDownTimer(20000, 1000) {
+		new CountDownTimer(20000, 1000) {
 
-		     public void onTick(long millisUntilFinished) {
-		         
-		     }
+			public void onTick(long millisUntilFinished) {
 
-		     public void onFinish() {
-		    	 NotificationCompat.Builder mBuilder =
-		    		        new NotificationCompat.Builder(DeviceListActivity.this)
-		    		        .setSmallIcon(R.drawable.ic_launcher)
-		    		        .setContentTitle("My notification")
-		    		        .setContentText("Hello World!");
-		    		// Creates an explicit intent for an Activity in your app
-		    		Intent resultIntent = new Intent(DeviceListActivity.this, DeviceListActivity.class);
+			}
 
-		    		// The stack builder object will contain an artificial back stack for the
-		    		// started Activity.
-		    		// This ensures that navigating backward from the Activity leads out of
-		    		// your application to the Home screen.
-		    		TaskStackBuilder stackBuilder = TaskStackBuilder.create(DeviceListActivity.this);
-		    		// Adds the back stack for the Intent (but not the Intent itself)
-		    		stackBuilder.addParentStack(DeviceListActivity.class);
-		    		// Adds the Intent that starts the Activity to the top of the stack
-		    		stackBuilder.addNextIntent(resultIntent);
-		    		PendingIntent resultPendingIntent =
-		    		        stackBuilder.getPendingIntent(
-		    		            0,
-		    		            PendingIntent.FLAG_UPDATE_CURRENT
-		    		        );
-		    		mBuilder.setContentIntent(resultPendingIntent);
-		    		NotificationManager mNotificationManager =
-		    		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		    		// mId allows you to update the notification later on.
-		    		mNotificationManager.notify(0, mBuilder.build());
-		         
-		     }
-		  }.start();
-		
-}
+			public void onFinish() {
+				NotificationCompat.Builder mBuilder =
+						new NotificationCompat.Builder(DeviceListActivity.this)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle("Notification")
+				.setContentText("The application has stopped!");
+				// Creates an explicit intent for an Activity in your app
+				Intent resultIntent = new Intent(DeviceListActivity.this, DeviceListActivity.class);
+
+				// The stack builder object will contain an artificial back stack for the
+				// started Activity.
+				// This ensures that navigating backward from the Activity leads out of
+				// your application to the Home screen.
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(DeviceListActivity.this);
+				// Adds the back stack for the Intent (but not the Intent itself)
+				stackBuilder.addParentStack(DeviceListActivity.class);
+				// Adds the Intent that starts the Activity to the top of the stack
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent =
+						stackBuilder.getPendingIntent(
+								0,
+								PendingIntent.FLAG_UPDATE_CURRENT
+								);
+				mBuilder.setContentIntent(resultPendingIntent);
+				NotificationManager mNotificationManager =
+						(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				// mId allows you to update the notification later on.
+				mNotificationManager.notify(0, mBuilder.build());
+			}
+		}.start();
+	}
 
 	public void onRefreshButtonClick() {
 		Log.d(TAG, String.valueOf(DEBUG));
 	}
-	
-	//protected abstract Result doInBackground (Params... params) {}
-		
-	
+
 }

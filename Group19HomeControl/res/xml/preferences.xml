@@ -4,9 +4,7 @@
         android:id="@+id/server_settings"
         android:title="@string/server_settings" 
         android:summary="@string/connect_on_launch_summary">
-                
-
-    
+                    
     <CheckBoxPreference 
         android:key="connect_to_server_check"
         android:defaultValue="true"

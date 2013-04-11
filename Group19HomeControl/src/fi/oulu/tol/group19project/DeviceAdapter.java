@@ -136,16 +136,15 @@ public class DeviceAdapter extends BaseAdapter {
 	public Device getDevice(String name) {
 		for(int i=0; i<devices.size(); i++){
 			if (devices.get(i).getName().equals(name)) {
-			return devices.get(i);
+				return devices.get(i);
 			}
-				
-			}
+
+		}
 		return null;
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }
