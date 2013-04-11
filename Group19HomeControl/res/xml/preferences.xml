@@ -5,7 +5,7 @@
         android:title="@string/server_settings" 
         android:summary="@string/connect_on_launch_summary">
                 
-    </PreferenceCategory>
+
     
     <CheckBoxPreference 
         android:key="connect_to_server_check"
@@ -17,6 +17,8 @@
         android:key="server_address"
         android:defaultValue=""
         android:dialogTitle="@string/Unit_address" />
+    
+        </PreferenceCategory>
     
 
 </PreferenceScreen>

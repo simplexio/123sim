@@ -58,6 +58,7 @@ public static final int DEBUG = 3;
 		this.startActivity(intent);
 		return false;
 	}
+	
 
 	@Override
 	protected void onStart() {

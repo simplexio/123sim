@@ -134,12 +134,12 @@ public class DeviceAdapter extends BaseAdapter {
 	}
 
 	public Device getDevice(String name) {
-		for(int i=0; i<devices.size(); i++) {
-			if(devices.get(i).getName().equals(name)) {
-				return devices.get(i);
+		for(int i=0; i<devices.size(); i++){
+			if (devices.get(i).getName().equals(name)) {
+			return devices.get(i);
 			}
-			
-		}
+				
+			}
 		return null;
 	}
 

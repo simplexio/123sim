@@ -16,6 +16,7 @@ public class SettingsActivity extends Activity {
 	public static final String KEY_PREF_SERVER_ADDRESS = "server_address";
 
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		settingsFragment = new SettingsFragment();
 
 		// Display the fragment as the main content.
@@ -55,6 +56,7 @@ public class SettingsActivity extends Activity {
 	}
 	
 	public void onResume() {
+		super.onResume();
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		sharedPref.registerOnSharedPreferenceChangeListener(settingsFragment);
 	}
