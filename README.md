@@ -1,11 +1,11 @@
 Group19 Home Control 11.4.2013
-====================
+=====================
 
 Janna Honkavuori, 2265416, honkavuori.janna@gmail.com
 Janika Pasma, 2256658, jpasma@ymail.com
 
 GENERAL USAGE NOTES
--------------------
+--------------------
 
 This application is a remote control for Home automation system.
  
