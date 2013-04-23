@@ -1,15 +1,19 @@
 package fi.oulu.tol.group19project;
 
+import fi.oulu.tol.group19project.HomeControlService.HomeControlBinder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.app.ListActivity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +25,7 @@ public class DeviceListActivity extends ListActivity {
 
 	private static final String TAG = "Group19HomeControl";
 	public static final int DEBUG = 3;
+	private HomeControlService mControlService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,9 @@ public class DeviceListActivity extends ListActivity {
 		this.setListAdapter(adapter);
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+		Intent intent = new Intent(this, HomeControlService.class);
+		startService(intent);
 	}
 
 	@Override
@@ -63,8 +71,11 @@ public class DeviceListActivity extends ListActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
+		Intent intent = new Intent(this, HomeControlService.class);
+		bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
 	}
+
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -104,10 +115,27 @@ public class DeviceListActivity extends ListActivity {
 				mNotificationManager.notify(0, mBuilder.build());
 			}
 		}.start();
+		if (mControlService != null) {
+			unbindService(mServiceConnection);
+			mControlService = null;
+		}
 	}
 
 	public void onRefreshButtonClick() {
 		Log.d(TAG, String.valueOf(DEBUG));
 	}
+
+
+	private ServiceConnection mServiceConnection = new ServiceConnection() {
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder) {
+			HomeControlBinder HomeControlBinder = (HomeControlBinder)binder;
+			mControlService = HomeControlBinder.getService();
+		}
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mControlService = null;
+		}
+	};
 
 }

@@ -12,5 +12,6 @@
     <string name="Unchecked">Unchecked</string>
     <string name="Unit_address">Central Unit Address</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_service_control">ServiceControl</string>
 
 </resources>

@@ -30,6 +30,10 @@
             android:name="fi.oulu.tol.group19project.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+                <activity
+            android:name="fi.oulu.tol.group19project.HomeControlService"
+            android:label="@string/title_service_control" >
+        </activity>
     </application>
 
 </manifest>
