@@ -1,6 +1,7 @@
 package fi.oulu.tol.group19project;
 
 import fi.oulu.tol.group19project.HomeControlService.HomeControlBinder;
+import fi.oulu.tol.group19project.model.AbstractDevice;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -25,7 +26,7 @@ public class DeviceListActivity extends ListActivity {
 
 	private static final String TAG = "Group19HomeControl";
 	public static final int DEBUG = 3;
-	private HomeControlService mControlService;
+	private HomeControlService homeControlService;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +39,18 @@ public class DeviceListActivity extends ListActivity {
 
 		Intent intent = new Intent(this, HomeControlService.class);
 		startService(intent);
+		
+		
+		
 	}
 
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
-		Device device = (Device)DeviceAdapter.getInstance().getItem(position);
+		AbstractDevice device = (AbstractDevice)DeviceAdapter.getInstance().getItem(position);
 		if (null != device) {
 			Intent intent = new Intent(this, DeviceActivity.class);
-			intent.putExtra(DeviceActivity.KEY_DEVICE_NAME, device.getName());
+			intent.putExtra(DeviceActivity.KEY_DEVICE_ID, device.getId());
 			this.startActivity(intent);
 		}
 	}
@@ -115,27 +118,30 @@ public class DeviceListActivity extends ListActivity {
 				mNotificationManager.notify(0, mBuilder.build());
 			}
 		}.start();
-		if (mControlService != null) {
+		if (homeControlService != null) {
 			unbindService(mServiceConnection);
-			mControlService = null;
+			//homeControlService = null;
 		}
 	}
 
 	public void onRefreshButtonClick() {
-		Log.d(TAG, String.valueOf(DEBUG));
+		Log.d(TAG, "Refresh Button Clicked");
 	}
 
-
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder binder) {
-			HomeControlBinder HomeControlBinder = (HomeControlBinder)binder;
-			mControlService = HomeControlBinder.getService();
-		}
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			mControlService = null;
-		}
-	};
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+       Log.d(TAG, "Service connected!");
+       HomeControlBinder binder = (HomeControlBinder)service;
+       homeControlService = binder.getService();
+       DeviceAdapter.getInstance().setDevices(homeControlService.getDevices()); // Wiring done
+    }
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+       Log.d(TAG, "Service disconnected!");
+       DeviceAdapter.getInstance().setDevices(null);  // Unwiring done, adapter has no devices to show
+       homeControlService = null;
+     }
 
+};
 }

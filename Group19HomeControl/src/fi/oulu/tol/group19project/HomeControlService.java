@@ -16,8 +16,8 @@ public class HomeControlService extends Service {
 	private final HomeControlBinder binder = new HomeControlBinder();
 	private DeviceContainer devices = new DeviceContainer(null, "container-1", "Test Container", null, null);
 
-	
-	protected void onCreate(Bundle savedInstanceState) {
+	@Override
+	public void onCreate() {
 		debugInitialize();
 	}
 	
@@ -38,10 +38,14 @@ public class HomeControlService extends Service {
 	}
 
 	public void debugInitialize () {
-	devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, 800.0, 10.0, 4000.0, "lumen"));
+	devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
 	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
-	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, 0.0, 0.0, 1.0, null));
+	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
 	devices.add(cont);
 
+	}
+	
+	public DeviceContainer getDevices() { 
+		return devices;
 	}
 }
