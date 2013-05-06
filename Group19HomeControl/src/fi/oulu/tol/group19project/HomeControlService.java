@@ -1,6 +1,8 @@
 package fi.oulu.tol.group19project;
 
 
+import org.json.JSONException;
+
 import fi.oulu.tol.group19project.model.AbstractDevice.Type;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
 import fi.oulu.tol.group19project.model.DeviceContainer;
@@ -9,16 +11,26 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.EditText;
 
 public class HomeControlService extends Service {
 
-
+	private final static String TAG = "DeviceParser";
 	private final HomeControlBinder binder = new HomeControlBinder();
-	private DeviceContainer devices = new DeviceContainer(null, "container-1", "Test Container", null, null);
+	private DeviceContainer devices = new DeviceContainer(null, "container-1", "No connection with Home", null, null);
+	private OHAPParser parser = null;
+	private String json = new String("{ \"container:room-1\": { \"name\": \"GF301-1\", \"description\": \"Antti's office\", \"location\": { \"latitude\": 65.058668, \"longitude\": 25.564338, \"altitude\": 100.0 }, 		\"sensor:switch-1\": { \"name\": \"Light switch\", \"description\": \"The light switch next to the door\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564338, \"altitude\": 100.6 }},		\"sensor:temperature-1\": { \"name\": \"Room temperature\", \"description\": \"The current temperature in the room\", \"state\": { \"type\": \"decimal\", \"value\": 21.1, \"range\": [-10.0, 60.0], \"unit\": \"Celcius\", \"unit-abbreviation\": \"C\" },\"location\": { \"latitude\": 65.058668, \"longitude\": 25.564339,\"altitude\": 101.2 } },		\"actuator:light-1\": { \"name\": \"Ceiling lamp\", \"description\": \"The fluerecent lamp in the ceiling\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564339, \"altitude\": 102.6  } } }}");
+	
 
 	@Override
 	public void onCreate() {
-		debugInitialize();
+	   Log.d(TAG, "In Service.onCreate");
+	   super.onCreate();
+	   //protocol = OHAPImplementation.getInstance();
+	   //protocol.setObserver(this);
+	   parser = new OHAPParser();
+	   debugInitialize();
 	}
 	
 	@Override
