@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import android.util.Log;
+import fi.oulu.tol.group19project.model.AbstractDevice;
+import fi.oulu.tol.group19project.model.ConcreteDevice;
 import fi.oulu.tol.group19project.model.DeviceContainer;
 
 /*
@@ -63,7 +65,7 @@ import fi.oulu.tol.group19project.model.DeviceContainer;
 	  }
 	}
 
-	*/
+ */
 
 public class OHAPParser {
 	private final static String TAG = "DeviceParser";
@@ -71,7 +73,7 @@ public class OHAPParser {
 	private final static String SENSOR= "sensor";
 	private final static String ACTUATOR = "actuator";
 
-	
+
 	private final static String NAME = "name";
 	private final static String DESCRIPTION = "description";
 	private final static String LOCATION = "location";
@@ -84,17 +86,20 @@ public class OHAPParser {
 	private final static String RANGE = "range";
 	private final static String UNIT = "unit";
 	private final static String UNITABBREVIATION = "unitabbreviation";
+
 	
-	public DeviceContainer parseString(String content) throws JSONException {
+	//Käytetään AbstractDevice kun ei tiedetä onko mistä on kyse: container vaiko sensori tai actuator
+	public AbstractDevice parseString(String content) throws JSONException {
 		Log.d(TAG, "Starting to parse the String...");
 		JSONObject object = (JSONObject) new JSONTokener(content).nextValue();
-		DeviceContainer dc = handleDevice (null, object);
+		AbstractDevice ad = handleDevice (null, object);
 		Log.d(TAG, "...parsed the input string.");
-		return dc;
+		return ad;
 	}
 
-	private DeviceContainer handleDevice(DeviceContainer parent, JSONObject object) throws JSONException {
-		DeviceContainer newDeviceContainer = null;
+	//Pitäsikö siis ottaa kaikista container sana pois, kuten deviceContainerId?
+	private AbstractDevice handleDevice(AbstractDevice parent, JSONObject object) throws JSONException {
+		AbstractDevice newDevice = null;
 		JSONArray names = object.names();
 		Log.d(TAG, "-- In handleDevice");
 		if (null != parent) {
@@ -104,19 +109,19 @@ public class OHAPParser {
 		}
 		if (null != names) {
 			// Get the first name in the names array.
-			String deviceContainerId = null;
+			String deviceId = null;
 			for (int i = 0; i<names.length(); i++) {
-				deviceContainerId = names.getString(i);
-				String elements[] = deviceContainerId.split(":");
-				Log.d(TAG, "Check if this is a DeviceContainer: " + deviceContainerId);
+				deviceId = names.getString(i);
+				String elements[] = deviceId.split(":");
+				Log.d(TAG, "Check if this is a Device: " + deviceId);
 				if (elements[0].equalsIgnoreCase(CONTAINER) ||
 						elements[0].equalsIgnoreCase(SENSOR) || elements[0].equalsIgnoreCase(ACTUATOR)) {
-					JSONObject newObject = object.getJSONObject(deviceContainerId);
-					Log.d(TAG, "Try to read the deviceContainer in readDeviceContainer...");
-					newDeviceContainer = readDeviceContainer(elements[0], elements[1], newObject);
-					if (parent != null && newDeviceContainer != null) {
+					JSONObject newObject = object.getJSONObject(deviceId);
+					Log.d(TAG, "Try to read the device in readDevice...");
+					newDevice = readDevice(elements[0], elements[1], newObject);
+					if (parent != null && newDevice != null) {
 						Log.d(TAG, "Adding a device to a parent device.");
-						parent.add(newDeviceContainer);
+						parent.add(newDevice);
 					}
 				}
 			}
@@ -125,17 +130,17 @@ public class OHAPParser {
 		// make this newly created person the parent.
 		// Return parent to caller.
 		if (parent == null)
-			parent = newDeviceContainer;
+			parent = newDevice;
 		return parent;
 	}
 
-	private DeviceContainer readDeviceContainer(String deviceContainerType, String deviceContainerId, JSONObject object) throws JSONException {
+	private AbstractDevice readDevice(String deviceContainerType, String deviceContainerId, JSONObject object) throws JSONException {
 
-		DeviceContainer thisDeviceContainer = null;
+		AbstractDevice thisDevice = null;
 
 		// Check if this object has names
 		Log.d(TAG, "-- In readDeviceContainer");
-		
+
 		// Object has names so initialize data variables:
 		String name = null;
 		String description = null;
@@ -148,52 +153,69 @@ public class OHAPParser {
 		Double []range = null;
 		String unit = null;
 		String unitabbreviation = null;
-		// All these elements must be there so we use getXxx instead of optXxx.
-		JSONObject nameObject = object.getJSONObject(CONTAINER);
-		name = nameObject.getString(NAME);
-		description = nameObject.getString(DESCRIPTION);
-
-
-//		double tmpDouble = object.optDouble(AGE);
-//		age = Double.valueOf(tmpDouble);
-//		if (age == Double.NaN) {
-//			age = null;
-//		}
-		
 		Double value = null;
-		double val = object.getDouble(VALUE);
-		value = Double.valueOf(val);
-		if (value == Double.NaN) {
-		   value = null;
-		}
+		Boolean valueType = null;
+
+		// All these elements must be there so we use getXxx instead of optXxx.
+		//JSONObject nameObject = object.getJSONObject(CONTAINER);
+		name = object.getString(NAME);
+		description = object.optString(DESCRIPTION);
+		//.opt ja .get ero = .opt käytetään niissä jotka eivät ole aina käytettävissä
+
+		//		double tmpDouble = object.optDouble(AGE);
+		//		age = Double.valueOf(tmpDouble);
+		//		if (age == Double.NaN) {
+		//			age = null;
+		//		}
 		
+	
+		JSONObject stateObject = object.getJSONObject(STATE);
+		type = stateObject.getString(TYPE);
+		if (type.equalsIgnoreCase("binary")){
+			stateObject.getBoolean(VALUE);
+
+		}else if (type.equalsIgnoreCase("decimal")){
+
+			unit = stateObject.optString(UNIT);
+			unitabbreviation = stateObject.optString(UNITABBREVIATION);
+
+			double val = object.getDouble(VALUE);
+			value = Double.valueOf(val);
+			if (value == Double.NaN) {
+				value = null;
+			}
+
+
+		}
+
+
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
 			Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
-			thisDeviceContainer= new DeviceContainer(null, name, null, description, null);
-			handleDevice(thisDeviceContainer, object);
+			thisDevice= new DeviceContainer(null, name, null, description, null);
+			handleDevice(thisDevice, object);
 		} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
 			Log.d(TAG, "Creating a child: " + name);
-			thisDeviceContainer = new DeviceContainer(null, name, null, description, null);
+			thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
 		} else {
 			// Not supported.
 			throw new JSONException("Invalid JSON structure");
 		}
 
-//		JSONArray array = object.optJSONArray(RANGE);
-//		if (null != array) {
-//			int tmpInt;
-//			for (int i = 0; i< array.length(); i++) {
-//				tmpInt = array.getInt(i);
-//				thisDeviceContainer.addRange(tmpInt);
-//			}
-//		}
+		//	JSONArray array = object.optJSONArray(RANGE);
+		//	if (null != array) {
+		//		int tmpInt;
+		//			for (int i = 0; i< array.length(); i++) {
+		//				tmpInt = array.getInt(i);
+		//				thisDevice.addLenght(tmpInt);
+		//			}
+		//		}
 
-		return thisDeviceContainer;
+		return thisDevice;
 	}
 
 
-		
-	}
-	
+
+}
+
 
 
