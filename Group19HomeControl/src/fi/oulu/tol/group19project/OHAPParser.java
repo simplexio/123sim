@@ -169,6 +169,7 @@ public class OHAPParser {
 		//		}
 		
 	
+		//ValueType pitäis saada myös tänne jonnekkin.
 		JSONObject stateObject = object.getJSONObject(STATE);
 		type = stateObject.getString(TYPE);
 		if (type.equalsIgnoreCase("binary")){
@@ -195,6 +196,7 @@ public class OHAPParser {
 			handleDevice(thisDevice, object);
 		} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
 			Log.d(TAG, "Creating a child: " + name);
+			//valueType on tärkeä ja pitää sisällyttää tuone sisälle
 			thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
 		} else {
 			// Not supported.
