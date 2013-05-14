@@ -85,10 +85,10 @@ public class OHAPParser {
 	private final static String VALUE = "value";
 	private final static String RANGE = "range";
 	private final static String UNIT = "unit";
-	private final static String UNITABBREVIATION = "unitabbreviation";
+	private final static String UNITABBREVIATION = "unit-abbreviation";
 
-	
-	//Käytetään AbstractDevice kun ei tiedetä onko mistä on kyse: container vaiko sensori tai actuator
+
+
 	public AbstractDevice parseString(String content) throws JSONException {
 		Log.d(TAG, "Starting to parse the String...");
 		JSONObject object = (JSONObject) new JSONTokener(content).nextValue();
@@ -97,7 +97,7 @@ public class OHAPParser {
 		return ad;
 	}
 
-	//Pitäsikö siis ottaa kaikista container sana pois, kuten deviceContainerId?
+
 	private AbstractDevice handleDevice(AbstractDevice parent, JSONObject object) throws JSONException {
 		AbstractDevice newDevice = null;
 		JSONArray names = object.names();
@@ -105,7 +105,7 @@ public class OHAPParser {
 		if (null != parent) {
 			Log.d(TAG, "-- Parent is: " + parent.getName());
 		} else {
-			Log.d(TAG, "-- DeviceContainer has no parent.");
+			Log.d(TAG, "-- AbstractDevice has no parent.");
 		}
 		if (null != names) {
 			// Get the first name in the names array.
@@ -139,7 +139,7 @@ public class OHAPParser {
 		AbstractDevice thisDevice = null;
 
 		// Check if this object has names
-		Log.d(TAG, "-- In readDeviceContainer");
+		Log.d(TAG, "-- In readDevice");
 
 		// Object has names so initialize data variables:
 		String name = null;
@@ -154,66 +154,93 @@ public class OHAPParser {
 		String unit = null;
 		String unitabbreviation = null;
 		Double value = null;
-		Boolean valueType = null;
-
-		// All these elements must be there so we use getXxx instead of optXxx.
-		//JSONObject nameObject = object.getJSONObject(CONTAINER);
-		name = object.getString(NAME);
-		description = object.optString(DESCRIPTION);
-		//.opt ja .get ero = .opt käytetään niissä jotka eivät ole aina käytettävissä
-
-		//		double tmpDouble = object.optDouble(AGE);
-		//		age = Double.valueOf(tmpDouble);
-		//		if (age == Double.NaN) {
-		//			age = null;
-		//		}
 		
-	
-		//ValueType pitäis saada myös tänne jonnekkin.
-		JSONObject stateObject = object.getJSONObject(STATE);
-		type = stateObject.getString(TYPE);
-		if (type.equalsIgnoreCase("binary")){
-			stateObject.getBoolean(VALUE);
+		ConcreteDevice.ValueType = ConcreteDevice.ValueType.BINARY;
+		Double minValue = null;
+		Double maxValue = null;
 
-		}else if (type.equalsIgnoreCase("decimal")){
-
-			unit = stateObject.optString(UNIT);
-			unitabbreviation = stateObject.optString(UNITABBREVIATION);
-
-			double val = object.getDouble(VALUE);
-			value = Double.valueOf(val);
-			if (value == Double.NaN) {
-				value = null;
+		
+		
+		JSONObject stateObject = object.optJSONObject("state");
+		if (null != stateObject) {
+			// We have the state structure there since stateObject is not null.
+			Object obj = stateObject.opt("value");
+			if (null != obj) {
+				// OK, we got the "value" in the "state" too. Alright!
+				if (obj instanceof Boolean) {
+					// OK, value was boolean, either true or false. Handle that!
+					Log.d(TAG, "Boolean value: " + obj);
+					boolean boolValue = (Boolean)obj;
+					valueType = ConcreteDevice.ValueType.BINARY;
+					if (boolValue) {
+						value = 1.0;
+					} else {
+						value = 0.0;
+					}
+					minValue = 0.0;
+					maxValue = 1.0;
+				} else if (obj instanceof Double) {
+					// OK now we know "value" was decimal: "value" : 21.1 for example.
+					valueType = ConcreteDevice.ValueType.DECIMAL;
+					Log.d(TAG, "Decimal value information found on device");
+					double val = (Double)obj;
+					Log.d(TAG, "Value of state is: "+val);
+					value = Double.valueOf(val);
+					if (value == Double.NaN) {
+						value = null;
+					}
+					// Let's check if we got the range array:
+					JSONArray array = stateObject.optJSONArray("range");
+					if (null != array) {
+						// YES!!! Range array is THERE!!!
+						val = array.getDouble(0);
+						minValue = Double.valueOf(val);
+						if (minValue == Double.NaN) {
+							minValue = null;
+						}
+						val = array.getDouble(1);
+						maxValue = Double.valueOf(val);
+						if (maxValue == Double.NaN) {
+							maxValue = null;
+						}
+					}
+				} else {
+					Log.d(TAG, "Something odd found!?: " +obj);
+				}
 			}
-
-
-		}
-
-
-		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
-			Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
-			thisDevice= new DeviceContainer(null, name, null, description, null);
-			handleDevice(thisDevice, object);
-		} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
-			Log.d(TAG, "Creating a child: " + name);
-			//valueType on tärkeä ja pitää sisällyttää tuone sisälle
-			thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
+			// Then the unit of the value:
+			unit = stateObject.optString("unit");
+			if (unit.length() == 0) {
+				unit = null;
+			}
+			unitabbreviation = stateObject.optString("unit-abbreviation");
+			if (unitabbreviation.length() == 0) {
+				unitabbreviation = null;
+			}
 		} else {
-			// Not supported.
-			throw new JSONException("Invalid JSON structure");
+			Log.d(TAG, "No state information in device");
 		}
 
-		//	JSONArray array = object.optJSONArray(RANGE);
-		//	if (null != array) {
-		//		int tmpInt;
-		//			for (int i = 0; i< array.length(); i++) {
-		//				tmpInt = array.getInt(i);
-		//				thisDevice.addLenght(tmpInt);
-		//			}
-		//		}
+	
 
-		return thisDevice;
+	if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
+		Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
+		thisDevice= new DeviceContainer(null, name, null, description, null);
+		handleDevice(thisDevice, object);
+	} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
+		Log.d(TAG, "Creating a child: " + name);
+
+		thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
+	} else {
+		// Not supported.
+		throw new JSONException("Invalid JSON structure");
 	}
+
+	
+
+
+	return thisDevice;
+}
 
 
 
