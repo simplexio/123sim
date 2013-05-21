@@ -17,9 +17,9 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void endSession(boolean forceStop) {
 		if(hasSession()) {
-			TaskData closeSession = new TaskData(null, TaskData.CLOSE_SESSION_CMD, null);
+			
 			try {
-				taskQueue.put(closeSession);
+				taskQueue.put(new TaskData(null, TaskData.CLOSE_SESSION_CMD, null));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -35,8 +35,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void getPath(String uid, String path) throws InterruptedException {
 		if (hasSession()) {
-			TaskData getData = new TaskData(uid, TaskData.GET_CMD, path);
-			taskQueue.put(getData);
+			taskQueue.put(new TaskData(uid, TaskData.GET_CMD, path));
 		}
 		else {
 			errorMessageToClient("No Session");
@@ -48,8 +47,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void listenTo(String uid, String path) throws InterruptedException {
 		if (hasSession()) {
-			TaskData message = new TaskData(uid, TaskData.LISTEN_CMD, path);
-			taskQueue.put(message);	
+			taskQueue.put(new TaskData(uid, TaskData.LISTEN_CMD, path));	
 
 		}
 		errorMessageToClient("No session");
@@ -58,8 +56,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void unlistenTo(String uid, String path) throws InterruptedException {
 		if (hasSession()) {
-			TaskData message1 = new TaskData(uid, TaskData.UNLISTEN_CMD, path);
-			taskQueue.put(message1);	
+			taskQueue.put(new TaskData(uid, TaskData.UNLISTEN_CMD, path));	
 
 		}
 		errorMessageToClient("No session");
@@ -68,8 +65,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void setPath(String uid, String path) throws InterruptedException {
 		if (hasSession()) {
-			TaskData stateChange = new TaskData(uid, TaskData.SET_CMD, path);
-			taskQueue.put(stateChange);
+			taskQueue.put(new TaskData(uid, TaskData.SET_CMD, path));
 		}
 		else {
 			errorMessageToClient("No Session");

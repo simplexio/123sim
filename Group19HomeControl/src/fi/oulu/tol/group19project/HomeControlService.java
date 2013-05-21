@@ -6,6 +6,7 @@ import org.json.JSONException;
 import fi.oulu.tol.group19project.model.AbstractDevice.Type;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
 import fi.oulu.tol.group19project.model.DeviceContainer;
+import fi.oulu.tol.group19project.ohap.OHAPBuilder.OHAPPathBuilder;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -28,8 +29,8 @@ public class HomeControlService extends Service {
 	public void onCreate() {
 	   Log.d(TAG, "In Service.onCreate");
 	   super.onCreate();
-	   //protocol = OHAPImplementation.getInstance();
-	   //protocol.setObserver(this);
+	   protocol = OHAPImplementation.getInstance();
+	   protocol.setObserver(this);
 	   parser = new OHAPParser();
 	   debugInitialize();
 	}

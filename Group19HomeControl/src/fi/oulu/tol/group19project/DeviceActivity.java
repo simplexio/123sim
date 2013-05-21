@@ -117,19 +117,33 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 							seekBar.setEnabled(true);
 
 							// ...and start listening to change events.
-							/* theSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-						         // Implement the onCheckedChangeListener here to handle the on/off check events!
-						      });*/
-						}
-					}
-				}
+							/*theSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+								public void onCheckedChanged(
+						    	        CompoundButton buttonView,
+						    	        boolean isChecked) {
+						    	      // If widget is now checked, we set the value to 1.
+						    	      if (isChecked) {
+						    	        ((ConcreteDevice)device).setValue(1.0);
+						    	        if (null != homeControlService) {
+						    	          homeControlService.deviceStateChanged((ConcreteDevice)device); // << tell service that device state changed.
+						    	        }
+						    	      // Otherwise the value is 0.
+						    	      } else {
+						    	        ((ConcreteDevice)device).setValue(0.0);
+						    	        if (null != homeControlService) {
+						    	          homeControlService.deviceStateChanged((ConcreteDevice)device); // << tell service that device state changed. 
+								// Implement the onCheckedChangeListener here to handle the on/off check events!
+						      }*/
+						}}
+					}}
+							
+					
 				//For containers, you just show the basic description of the container, plus possibly how many child devices it has (just a number is enough).
-				else {
+				else if (device.getType() == AbstractDevice.Type.CONTAINER) {
 					((TextView)findViewById(R.id.description_item)).setText(device.getDescription());
-				}
+				}}
 			}
-		}
-	}
+						
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
