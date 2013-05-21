@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-       
     <TextView
         android:id="@+id/name_item"
         android:layout_width="match_parent"
@@ -18,25 +17,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
     </TextView>
-    
-        <TextView
+
+    <TextView
         android:id="@+id/value_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" >
-   		</TextView>
-    
-    
-<Switch
-   android:id="@+id/value_on_off_button"
-   android:layout_width="wrap_content"
-   android:layout_height="wrap_content"
-   android:text=""
-   android:textOff="Off"
-   android:textOn="On" />
+    </TextView>
 
+    <Switch
+        android:id="@+id/value_on_off_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textOff="Off"
+        android:textOn="On" />
 
-<SeekBar
+    <SeekBar
         android:id="@+id/value_slider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
