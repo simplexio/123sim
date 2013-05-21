@@ -6,7 +6,7 @@ import org.json.JSONException;
 import fi.oulu.tol.group19project.model.AbstractDevice.Type;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
 import fi.oulu.tol.group19project.model.DeviceContainer;
-import fi.oulu.tol.group19project.ohap.OHAPBuilder.OHAPPathBuilder;
+import fi.oulu.tol.group19project.ohap.OHAPPathBuilder;
 import fi.oulu.tol.group19project.ohap.OHAPImplementation;
 import fi.oulu.tol.group19project.ohap.OHAPInterface;
 import fi.oulu.tol.group19project.ohap.OHAPListener;
@@ -31,13 +31,16 @@ public class HomeControlService extends Service implements OHAPListener{
 	private String json = new String("{ \"container:room-1\": { \"name\": \"GF301-1\", \"description\": \"Antti's office\", \"location\": { \"latitude\": 65.058668, \"longitude\": 25.564338, \"altitude\": 100.0 }, 		\"sensor:switch-1\": { \"name\": \"Light switch\", \"description\": \"The light switch next to the door\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564338, \"altitude\": 100.6 }},		\"sensor:temperature-1\": { \"name\": \"Room temperature\", \"description\": \"The current temperature in the room\", \"state\": { \"type\": \"decimal\", \"value\": 21.1, \"range\": [-10.0, 60.0], \"unit\": \"Celcius\", \"unit-abbreviation\": \"C\" },\"location\": { \"latitude\": 65.058668, \"longitude\": 25.564339,\"altitude\": 101.2 } },		\"actuator:light-1\": { \"name\": \"Ceiling lamp\", \"description\": \"The fluerecent lamp in the ceiling\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564339, \"altitude\": 102.6  } } }}");
 	private OHAPInterface protocol = null;
 	private Handler eventHandler = new Handler();
+	private HomeControlServiceObserver observer = null;
+
+	public void setObserver(HomeControlServiceObserver observer) {
+		this.observer = observer;
+	}
 
 	@Override
 	public void onCreate() {
 		Log.d(TAG, "In Service.onCreate");
 		super.onCreate();
-		//protocol = OHAPImplementation.getInstance();
-		//protocol.setObserver(this);
 		parser = new OHAPParser();
 		debugInitialize();
 		devices = null;
@@ -70,6 +73,7 @@ public class HomeControlService extends Service implements OHAPListener{
 			devices = (DeviceContainer)parser.parseString(json);
 		} catch (JSONException e) {
 			e.printStackTrace();
+			}
 		}
 
 		/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));

@@ -9,11 +9,6 @@ package fi.oulu.tol.group19project;
  */
 public interface HomeControlServiceObserver {
 	
-private HomeControlServiceObserver observer = null;
-
-public void setObserver(HomeControlServiceObserver observer) {
-   this.observer = observer;
-}
 	/**
 	 * Called when the model is updated. Client can
 	 * get the new model from the service, and update the UI accordingly.<p>

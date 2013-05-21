@@ -209,9 +209,5 @@ if (homeControlService != null) {
 }
 }
 
-@Override
-public void setObserver(HomeControlServiceObserver observer) {
-	// TODO Auto-generated method stub
-	
-}
+
 }
