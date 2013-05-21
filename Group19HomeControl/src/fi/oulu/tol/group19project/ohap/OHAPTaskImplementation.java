@@ -88,7 +88,7 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 			if (entity != null) {
 				//   If the request instace was HttpDelete
 				//??
-				if (requestBase == HttpDelete) {
+				if (requestBase == entity) {
 					//call handleString to close the session after sending the HTTP DELETE
 					handleString(TaskData.CLOSE_SESSION_CMD);
 
@@ -120,7 +120,7 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 			//We do have a session -- that means that we actually got some data from the server!
 			//Handle that data by calling handleInputStream with the entitys' content as the parameter
 			else {
-				handleInputStream((InputStream) entity);
+				handleInputStream(entity.getContent());
 			}
 		}
 		}

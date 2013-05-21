@@ -102,7 +102,7 @@ public class HomeControlService extends Service implements OHAPListener{
 
 		@Override
 		public void sessionInitiatedSuccessfully() {
-			protocol.getPath(null, "/");
+			protocol.getPath(null,"/");
 			if (devices == null) {
 				devices = (DeviceContainer) parser.parseString(content);
 			}
