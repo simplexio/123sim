@@ -69,7 +69,7 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 		this.startActivity(intent);
 		return super.onOptionsItemSelected(item);
 		
-		/*switch (item.getItemId()) {
+		switch (item.getItemId()) {
 		
 		   case R.id.server_connect: {
 		      connectToControlUnit();
@@ -93,7 +93,7 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 		      e.printStackTrace();
 		   }
 		   break;
-		   }}*/
+		   }}
 	}
 
 

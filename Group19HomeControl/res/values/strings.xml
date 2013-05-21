@@ -14,7 +14,13 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_service_control">ServiceControl</string>
     <string name="default_server_address">Default Server Address</string>
-
+    <string name="value_text">Value Text</string>
+    <string name="value_slider">Value Slider</string>
+    <string name="value_on_off_button">Value On Off Button</string>
+	<string name="server_connect">Server Connect</string>
+	<string name="server_disconnet">Server Disconnect</string>
+	<string name="server_force_close">Server Force Close</string>
+	<string name="server_refresh">Server Refresh</string>
     
 
 </resources>
