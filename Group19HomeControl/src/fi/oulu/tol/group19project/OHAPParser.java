@@ -8,6 +8,7 @@ import org.json.JSONTokener;
 import android.util.Log;
 import fi.oulu.tol.group19project.model.AbstractDevice;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
+import fi.oulu.tol.group19project.model.ConcreteDevice.ValueType;
 import fi.oulu.tol.group19project.model.DeviceContainer;
 
 /*
@@ -155,7 +156,7 @@ public class OHAPParser {
 		String unitabbreviation = null;
 		Double value = null;
 		
-		ConcreteDevice.ValueType = ConcreteDevice.ValueType.BINARY;
+		ValueType valueType = ConcreteDevice.ValueType.BINARY;
 		Double minValue = null;
 		Double maxValue = null;
 

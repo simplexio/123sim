@@ -216,16 +216,6 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 	       homeControlService = null;
 	     }
 
-	};
+	};}
 	
-	   // Then call this method when the device state has changed (in DeviceActivity propably):
-	   public void deviceStateChanged(ConcreteDevice device) {
-	      String path = ohapBuilder.createPath(device, true);
-	      if (null != path) {
-	         try {
-	            protocol.setPath(null, path);
-	         } catch (InterruptedException e) {
-	            e.printStackTrace();
-	         }
-	      }
-}
+

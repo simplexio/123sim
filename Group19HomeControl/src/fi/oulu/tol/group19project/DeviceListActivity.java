@@ -15,13 +15,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-public class DeviceListActivity extends ListActivity {
+public class DeviceListActivity extends ListActivity implements HomeControlServiceObserver {
 
 
 	private static final String TAG = "Group19HomeControl";
@@ -134,7 +135,11 @@ public class DeviceListActivity extends ListActivity {
        Log.d(TAG, "Service connected!");
        HomeControlBinder binder = (HomeControlBinder)service;
        homeControlService = binder.getService();
-       DeviceAdapter.getInstance().setDevices(homeControlService.getDevices()); // Wiring done
+       homeControlService.setObserver(DeviceListActivity.this);
+       if (checkAutoConnect()) {
+    	   connectToControlUnit();
+       } 
+        DeviceAdapter.getInstance().setDevices(homeControlService.getDevices()); // Wiring done
     }
     @Override
     public void onServiceDisconnected(ComponentName name) {
@@ -144,4 +149,30 @@ public class DeviceListActivity extends ListActivity {
      }
 
 };
+
+//<<< New method for the activity:
+private boolean checkAutoConnect() {
+SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+// Check what you use as the first parameter in your setting!!!
+boolean doConnect = sharedPref.getBoolean(SettingsActivity.KEY_PREF_CONNECT_TO_SERVER_SETTING, false);
+return doConnect;
+}
+
+//<<< New method for the activity:
+private void connectToControlUnit() {
+SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+// Again check which setting keys you use in your app and if your strings.xml has default address for server.
+String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
+if (homeControlService != null) {
+   homeControlService.getProtocol().startSession(addr);
+}
+}
+
+@Override
+public void modelUpdated() {
+   if (homeControlService != null) {
+      DeviceAdapter.getInstance().setDevices(homeControlService.getDevices());
+      getListView().invalidateViews();
+   }
+}
 }

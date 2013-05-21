@@ -56,8 +56,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	@Override
 	public void unlistenTo(String uid, String path) throws InterruptedException {
 		if (hasSession()) {
-			taskQueue.put(new TaskData(uid, TaskData.UNLISTEN_CMD, path));	
-
+			taskQueue.put(new TaskData(uid, TaskData.UNLISTEN_CMD, path));
 		}
 		errorMessageToClient("No session");
 	}
@@ -78,6 +77,11 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	protected void doShutDown(boolean forceShutdown) {
 		endSession(forceShutdown);
 
+	}
+
+	public static Object getInstance() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

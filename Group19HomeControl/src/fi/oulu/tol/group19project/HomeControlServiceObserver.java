@@ -8,6 +8,9 @@ package fi.oulu.tol.group19project;
  * whatever is visibile to the user (list contents, etc.).
  */
 public interface HomeControlServiceObserver {
+	
+
+private HomeControlServiceObserver observer = null;
 	/**
 	 * Called when the model is updated. Client can
 	 * get the new model from the service, and update the UI accordingly.<p>
@@ -16,4 +19,8 @@ public interface HomeControlServiceObserver {
 	 * Client could then check what actually needs to be updated.
 	 */
 	public void modelUpdated();
-}
+
+
+public void setObserver(HomeControlServiceObserver observer) {
+	   this.observer = observer;
+	}
