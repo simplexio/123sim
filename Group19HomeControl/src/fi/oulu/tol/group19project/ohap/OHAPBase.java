@@ -2,6 +2,7 @@ package fi.oulu.tol.group19project.ohap;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import android.util.Log;
 
 /**
