@@ -10,6 +10,7 @@ import fi.oulu.tol.group19project.ohap.OHAPBuilder.OHAPPathBuilder;
 import fi.oulu.tol.group19project.ohap.OHAPImplementation;
 import fi.oulu.tol.group19project.ohap.OHAPInterface;
 import fi.oulu.tol.group19project.ohap.OHAPListener;
+import fi.oulu.tol.group19project.ohap.TaskData;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -33,18 +34,20 @@ public class HomeControlService extends Service implements OHAPListener{
 
 	@Override
 	public void onCreate() {
-	   Log.d(TAG, "In Service.onCreate");
-	   super.onCreate();
-	   //protocol = OHAPImplementation.getInstance();
-	   //protocol.setObserver(this);
-	   parser = new OHAPParser();
-	   debugInitialize();
-	   protocol = OHAPImplementation.getInstance();
-	   protocol.setObserver(this);
+		Log.d(TAG, "In Service.onCreate");
+		super.onCreate();
+		//protocol = OHAPImplementation.getInstance();
+		//protocol.setObserver(this);
+		parser = new OHAPParser();
+		debugInitialize();
+		devices = null;
+		protocol = OHAPImplementation.getInstance();
+		protocol.setObserver(this);
 
-   
+
+
 	}
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return START_STICKY;
@@ -68,65 +71,72 @@ public class HomeControlService extends Service implements OHAPListener{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
-/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
+
+		/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
 	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
 	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
 	devices.add(cont);
 
 	}*/
-	
-	public DeviceContainer getDevices() { 
-		return devices;
-	}
+
+		public DeviceContainer getDevices() { 
+			return devices;
+		}
 
 
-	   // Then call this method when the device state has changed (in DeviceActivity propably):
-	   public void deviceStateChanged(ConcreteDevice device) {
-	      String path = ohapBuilder.createPath(device, true);
-	      if (null != path) {
-	         try {
-	            protocol.setPath(null, path);
-	         } catch (InterruptedException e) {
-	            e.printStackTrace();
-	         }
-	      }
-}
-
-	@Override
-	public void sessionInitiatedSuccessfully() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sessionEnded() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void contentFromServerArrived(String content) {
-		if (null != observer) {
-			   observer.modelUpdated();
+		// Then call this method when the device state has changed (in DeviceActivity propably):
+		public void deviceStateChanged(ConcreteDevice device) {
+			String path = ohapBuilder.createPath(device, true);
+			if (null != path) {
+				try {
+					protocol.setPath(null, path);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		
-	}
+		}
 
-	@Override
-	public void errorMessageFromServer(String msg) {
-		// TODO Auto-generated method stub
-		
-	}
+		@Override
+		public void sessionInitiatedSuccessfully() {
+			protocol.getPath(TaskData.GET_CMD, "/");
+			if (devices == null) {
+				devices = (DeviceContainer) parser.parseString(content);
+			}
+			else {
 
-	@Override
-	public void okFromServerArrived() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+				DeviceContainer newData = (DeviceContainer)parser.parseString(content);
+				devices.updateValues(newData);
+			}
+		}
 
-public OHAPInterface getProtocol() {
-   return protocol;
-}
-}
+		@Override
+		public void sessionEnded() {
+			devices = null;
+
+		}
+
+		@Override
+		public void contentFromServerArrived(String content) {
+			if (null != observer) {
+				observer.modelUpdated();
+			}
+
+		}
+
+		@Override
+		public void errorMessageFromServer(String msg) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void okFromServerArrived() {
+			// TODO Auto-generated method stub
+
+		}
+
+
+		public OHAPInterface getProtocol() {
+			return protocol;
+		}
+	}

@@ -326,20 +326,21 @@ public class ConcreteDevice extends AbstractDevice {
 	 * 
 	 * @param fromDevice The object where values are read.
 	 */
-	public void updateValues(ConcreteDevice fromDevice) {
+	public void updateValues(AbstractDevice fromDevice) {
 		if (getId().equals(fromDevice.getId())) {
 			super.updateValues(fromDevice);
-			if (fromDevice.getValue() != null) {
-				value = fromDevice.getValue();
+			ConcreteDevice cd = (ConcreteDevice)fromDevice;
+			if (cd.getValue() != null) {
+				value = cd.getValue();
 			}
-			if (fromDevice.getMinValue() != null) {
-				minValue = fromDevice.getMinValue();
+			if (cd.getMinValue() != null) {
+				minValue = cd.getMinValue();
 			}
-			if (fromDevice.getMaxValue() != null) {
-				maxValue = fromDevice.getMaxValue();
+			if (cd.getMaxValue() != null) {
+				maxValue = cd.getMaxValue();
 			}
-			if (fromDevice.getUnit() != null) {
-				unit = fromDevice.getUnit();
+			if (cd.getUnit() != null) {
+				unit = cd.getUnit();
 			}
 		}
 	}

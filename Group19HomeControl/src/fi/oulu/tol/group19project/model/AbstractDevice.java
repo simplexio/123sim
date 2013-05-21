@@ -279,10 +279,10 @@ public abstract class AbstractDevice implements Comparable<AbstractDevice> {
 	 * @param fromDevice The object with new values.
 	 */
 	protected void updateValues(AbstractDevice fromDevice) {
-		if (fromDevice.getName() != null) {
+		if (fromDevice.getName() != null && fromDevice.name.length() > 0) {
 			setName(fromDevice.getName());
 		}
-		if (fromDevice.getDescription() != null) {
+		if (fromDevice.getDescription() != null && fromDevice.description.length() > 0) {
 			setDescription(fromDevice.getDescription());
 		}
 		if (fromDevice.getLocation() != null) {

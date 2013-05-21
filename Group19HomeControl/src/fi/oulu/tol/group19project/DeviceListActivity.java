@@ -65,10 +65,35 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
-
 		Intent intent = new Intent(this, SettingsActivity.class);
 		this.startActivity(intent);
-		return false;
+		return super.onOptionsItemSelected(item);
+		
+		switch (item.getItemId()) {
+		
+		   case R.id.server_connect: {
+		      connectToControlUnit();
+		      break;
+		   }
+		   case R.id.server_disconnect: {
+		      disconnectFromControlUnit(false);
+		      break;
+		   }
+		   case R.id.server_force_close: {
+		      disconnectFromControlUnit(true);
+		      break;
+		   }
+		   case R.id.server_refresh: {
+		   try {
+		      if (homeControlService != null) {
+		         Log.d(TAG, "Refreshing device data from server");
+		         homeControlService.getProtocol().getPath(null, "/");
+		      }
+		   } catch (InterruptedException e) {
+		      e.printStackTrace();
+		   }
+		   break;
+		   }}
 	}
 
 
@@ -174,5 +199,19 @@ public void modelUpdated() {
       DeviceAdapter.getInstance().setDevices(homeControlService.getDevices());
       getListView().invalidateViews();
    }
+}
+
+//And a new method for activity:
+private void disconnectFromControlUnit(boolean doForceClose) {
+Log.d(TAG, "Disconnect from control unit");
+if (homeControlService != null) {
+   homeControlService.getProtocol().endSession(doForceClose);
+}
+}
+
+@Override
+public void setObserver(HomeControlServiceObserver observer) {
+	// TODO Auto-generated method stub
+	
 }
 }

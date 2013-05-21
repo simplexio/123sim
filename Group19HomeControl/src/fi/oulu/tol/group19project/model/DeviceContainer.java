@@ -135,7 +135,7 @@ public class DeviceContainer extends AbstractDevice {
 			// Also remember to update my children, 
 			// if the fromDevice has something to update there too.
 			if (fromDevice.getChildCount() > 0) {
-				for (AbstractDevice from : fromDevice.devices) {
+				for (AbstractDevice from : ((DeviceContainer)fromDevice).devices) {
 					for (AbstractDevice my : devices) {
 						my.updateValues(from);
 					}
