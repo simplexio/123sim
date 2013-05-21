@@ -15,8 +15,9 @@ import android.util.Log;
 import android.widget.EditText;
 
 public class HomeControlService extends Service {
-
-	private final static String TAG = "DeviceParser";
+	// Create the path builder as a member of HomeControlService:
+	   private OHAPPathBuilder ohapBuilder = new OHAPPathBuilder();
+		private final static String TAG = "DeviceParser";
 	private final HomeControlBinder binder = new HomeControlBinder();
 	private DeviceContainer devices = new DeviceContainer(null, "container-1", "No connection with Home", null, null);
 	private OHAPParser parser = null;
@@ -51,20 +52,25 @@ public class HomeControlService extends Service {
 
 	public void debugInitialize () {
 		//lauseella kutsutaan ylläolevassta json stringistä olevat tiedot
-		try {
+		/*try {
 			devices = (DeviceContainer)parser.parseString(json);
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
-//	devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
-//	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
-//	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
-//	devices.add(cont);
+devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
+	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
+	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
+	devices.add(cont);
 
 	}
 	
 	public DeviceContainer getDevices() { 
 		return devices;
+	}
+
+	public void deviceStateChanged(ConcreteDevice device) {
+		// TODO Auto-generated method stub
+		
 	}
 }
