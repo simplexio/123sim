@@ -199,8 +199,10 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 	}
 
 	@Override
-	public void onStopTrackingTouch(SeekBar arg0) {
-		// TODO Auto-generated method stub
+	public void onStopTrackingTouch(SeekBar seekbar) {
+	    if (null != homeControlService) {
+	        homeControlService.deviceStateChanged((ConcreteDevice)device);  // tell again that the device state changed.
+	      }
 
 	}
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -216,6 +218,9 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 	       homeControlService = null;
 	     }
 
-	};}
+	};
+	
+	
+}
 	
 
