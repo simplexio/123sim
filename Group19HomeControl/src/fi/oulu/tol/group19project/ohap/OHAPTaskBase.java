@@ -23,7 +23,7 @@ import org.apache.http.params.HttpParams;
 
 import android.net.http.AndroidHttpClient;
 import android.util.Log;
-//import fi.oulu.tol.group19project.Constants;
+import fi.oulu.tol.group19project.Constants;
 
 /**
  * A class for network tasks in home control client, managed by the
