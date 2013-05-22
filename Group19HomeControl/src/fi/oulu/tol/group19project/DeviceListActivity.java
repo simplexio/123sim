@@ -191,7 +191,7 @@ SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(thi
 String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
 if (homeControlService != null) {
 	//tähän addr tilalle http://....jne jos ei connect onnistu
-   homeControlService.getProtocol().startSession(addr);
+   homeControlService.getProtocol().startSession("http://ohap.opimobi.com:18000");
 }
 }
 
