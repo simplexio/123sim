@@ -10,17 +10,18 @@
     <string name="connect_on_launch_summary">Connect On Launch</string>
     <string name="Checked">Checked</string>
     <string name="Unchecked">Unchecked</string>
-    <string name="Unit_address">Central Unit Address</string>
+    <string name="Unit_address">http://ohap.opimobi.com:18000</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_service_control">ServiceControl</string>
-    <string name="default_server_address">Default Server Address</string>
+    <string name="default_server_address">http://ohap.opimobi.com:18000</string>
     <string name="value_text">Value Text</string>
     <string name="value_slider">Value Slider</string>
     <string name="value_on_off_button">Value On Off Button</string>
 	<string name="server_connect">Server Connect</string>
-	<string name="server_disconnet">Server Disconnect</string>
+	<string name="server_disconnect">Server Disconnect</string>
 	<string name="server_force_close">Server Force Close</string>
 	<string name="server_refresh">Server Refresh</string>
+	<string name="server_said_error">Error from server</string>
     
 
 </resources>

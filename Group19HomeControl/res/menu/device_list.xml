@@ -6,5 +6,30 @@
         android:showAsAction="never"
         android:title="@string/action_settings"/>
     
+        <item
+        android:id="@+id/server_connect"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/server_connect"/>
+        
+        <item
+        android:id="@+id/server_disconnect"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/server_disconnect"/>
+    
+     <item
+        android:id="@+id/server_force_close"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/server_force_close"/>
+     
+      <item
+        android:id="@+id/server_refresh"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/server_refresh"/>
+        
+    
 
 </menu>

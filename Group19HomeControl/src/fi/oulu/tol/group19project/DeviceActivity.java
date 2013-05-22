@@ -115,25 +115,6 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 						//For actuators, you show data values with an editable widget (slider, editor, on/off button,...), with setEnabled(true) which is of course on by default.
 						else {
 							seekBar.setEnabled(true);
-
-							// ...and start listening to change events.
-							/*theSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-								public void onCheckedChanged(
-						    	        CompoundButton buttonView,
-						    	        boolean isChecked) {
-						    	      // If widget is now checked, we set the value to 1.
-						    	      if (isChecked) {
-						    	        ((ConcreteDevice)device).setValue(1.0);
-						    	        if (null != homeControlService) {
-						    	          homeControlService.deviceStateChanged((ConcreteDevice)device); // << tell service that device state changed.
-						    	        }
-						    	      // Otherwise the value is 0.
-						    	      } else {
-						    	        ((ConcreteDevice)device).setValue(0.0);
-						    	        if (null != homeControlService) {
-						    	          homeControlService.deviceStateChanged((ConcreteDevice)device); // << tell service that device state changed. 
-								// Implement the onCheckedChangeListener here to handle the on/off check events!
-						      }*/
 						}}
 					}}
 							
@@ -143,6 +124,8 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 					((TextView)findViewById(R.id.description_item)).setText(device.getDescription());
 				}}
 			}
+	
+	
 						
 
 	@Override

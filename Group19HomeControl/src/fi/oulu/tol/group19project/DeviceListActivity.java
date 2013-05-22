@@ -67,10 +67,10 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 	public boolean onOptionsItemSelected (MenuItem item) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		this.startActivity(intent);
-		return super.onOptionsItemSelected(item);
 		
-		/*switch (item.getItemId()) {
 		
+		switch (item.getItemId()) {
+	
 		   case R.id.server_connect: {
 		      connectToControlUnit();
 		      break;
@@ -93,7 +93,8 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 		      e.printStackTrace();
 		   }
 		   break;
-		   }} */
+		   }}
+		return super.onOptionsItemSelected(item);
 	}
 
 
@@ -189,6 +190,7 @@ SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(thi
 // Again check which setting keys you use in your app and if your strings.xml has default address for server.
 String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
 if (homeControlService != null) {
+	//tähän addr tilalle http://....jne jos ei connect onnistu
    homeControlService.getProtocol().startSession(addr);
 }
 }

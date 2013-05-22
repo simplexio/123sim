@@ -2,10 +2,14 @@ package fi.oulu.tol.group19project.ohap;
 
 
 public class OHAPImplementation extends OHAPBase implements OHAPInterface {
+	private static OHAPImplementation instance = null;
+	private OHAPImplementation() {
+		
+	}
 	
 	@Override
 	public void setObserver(OHAPListener observer) {
-
+		this.observer=observer;
 	}
 
 	@Override
@@ -79,9 +83,11 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 
 	}
 
-	public static Object getInstance() {
-		// TODO Auto-generated method stub
-		return null;
+	public static OHAPImplementation getInstance() {
+		if (instance == null) {
+			instance = new OHAPImplementation();
+		}
+		return instance;
 	}
 
 

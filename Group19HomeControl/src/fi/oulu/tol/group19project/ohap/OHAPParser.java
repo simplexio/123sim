@@ -156,7 +156,7 @@ public class OHAPParser {
 		String unitabbreviation = null;
 		Double value = null;
 		
-		ValueType valueType = ConcreteDevice.ValueType.BINARY;
+		ConcreteDevice.ValueType valueType = ConcreteDevice.ValueType.BINARY;
 		Double minValue = null;
 		Double maxValue = null;
 

@@ -46,9 +46,6 @@ public class HomeControlService extends Service implements OHAPListener{
 		devices = null;
 		protocol = OHAPImplementation.getInstance();
 		protocol.setObserver(this);
-
-
-
 	}
 
 	@Override
@@ -73,74 +70,103 @@ public class HomeControlService extends Service implements OHAPListener{
 			devices = (DeviceContainer)parser.parseString(json);
 		} catch (JSONException e) {
 			e.printStackTrace();
-			}
 		}
+	}
 
-		/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
+	/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
 	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
 	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
 	devices.add(cont);
 
 	}*/
 
-		public DeviceContainer getDevices() { 
-			return devices;
+	public DeviceContainer getDevices() { 
+		return devices;
+	}
+
+
+	// Then call this method when the device state has changed (in DeviceActivity propably):
+	public void deviceStateChanged(ConcreteDevice device) {
+		String path = ohapBuilder.createPath(device, true);
+		if (null != path) {
+			try {
+				protocol.setPath(null, path);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void sessionInitiatedSuccessfully() {
+		try {
+			protocol.getPath(null,"/");
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+	}
 
-		// Then call this method when the device state has changed (in DeviceActivity propably):
-		public void deviceStateChanged(ConcreteDevice device) {
-			String path = ohapBuilder.createPath(device, true);
-			if (null != path) {
+	@Override
+	public void sessionEnded() {
+		devices = null;
+
+	}
+
+	@Override
+	public void contentFromServerArrived(final String content) {
+		eventHandler.post(new Runnable() {
+			@Override
+			public void run() {
 				try {
-					protocol.setPath(null, path);
-				} catch (InterruptedException e) {
+					if (devices == null) {
+
+						devices = (DeviceContainer) parser.parseString(content);
+
+					}
+					else {
+
+						DeviceContainer newData = (DeviceContainer)parser.parseString(content);
+						devices.updateValues(newData);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
+		});
 
-		@Override
-		public void sessionInitiatedSuccessfully() {
-			protocol.getPath(null,"/");
-			if (devices == null) {
-				devices = (DeviceContainer) parser.parseString(content);
-			}
-			else {
-
-				DeviceContainer newData = (DeviceContainer)parser.parseString(content);
-				devices.updateValues(newData);
-			}
-		}
-
-		@Override
-		public void sessionEnded() {
-			devices = null;
-
-		}
-
-		@Override
-		public void contentFromServerArrived(String content) {
-			if (null != observer) {
+		if (null != observer) {
 				observer.modelUpdated();
 			}
 
 		}
-
-		@Override
-		public void errorMessageFromServer(String msg) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void okFromServerArrived() {
-			// TODO Auto-generated method stub
-
-		}
-
-
-		public OHAPInterface getProtocol() {
-			return protocol;
-		}
+	
+	@Override
+	public void errorMessageFromServer(final String msg) {
+		eventHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(TAG, "Model got error msg from server: " + msg);
+				String str = getString(R.string.server_said_error);
+				Toast.makeText(HomeControlService.this, str + " " + msg, Toast.LENGTH_LONG).show();
+			}
+		});
 	}
+
+
+
+	@Override
+	public void okFromServerArrived() {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	public OHAPInterface getProtocol() {
+		return protocol;
+	}
+
+
+}

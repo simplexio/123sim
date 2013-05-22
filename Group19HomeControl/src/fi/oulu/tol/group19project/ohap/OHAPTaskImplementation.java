@@ -1,7 +1,7 @@
 package fi.oulu.tol.group19project.ohap;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -16,7 +16,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
@@ -44,14 +43,13 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 		//Declare a HttpRequestBase variable and set it to null.
 		HttpRequestBase requestBase = null;
 		//Using the task parameter, call createUrl (a method you have been given).
-		createUrl(task);
 		//  * it will return you a URI object (or null if it could not be created)
 		//If the returned URI is not null
 		//   Call createRequest (a method given to you) with the task and URI objects.
 		//   Save the returned request object to the HttpRequestBase variable you declared on the first line
 		URI value = createUrl(task);
 		if (value != null) {
-			requestBase=createRequest(task, Url);
+			requestBase=createRequest(task, value);
 		}
 		//End if
 		//If the request object is null, return away from there
@@ -65,14 +63,15 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 		//Set this task object busy at this point, since now we're going to execute the http request and it may take time:
 		else {
 			//??
-			HttpHost host = new HttpHost(host);
+			HttpHost host = new HttpHost(value.getHost(), value.getPort(), value.getScheme());
 			synchronized (this) {
 				isBusy = true;
 			}
 			//Declare a HttpResponse variable and set it to null.
+			try {
 			HttpResponse response = null;
 			//** Now: execute the request using the android http client, with the host and request parameters! **
-			client.execute(host, requestBase);
+			response = client.execute(host, requestBase);
 			//We will only get to this line when the server responds
 			// -- we may have to wait for seconds, minutes, hours... depending on the server!
 			//Then we set this object not busy:
@@ -81,53 +80,70 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 			}
 			//And now we are ready to check what the server response is...
 			//Delcare a HttpEntity object and get that from the response using getEntity().
-			HttpEntity entity = null;
+			HttpEntity entity = response.getEntity();
 			//??
-			entity.getContent();
 			//If the entity is not null
 			if (entity != null) {
 				//   If the request instace was HttpDelete
 				//??
-				if (requestBase == entity) {
+				if (requestBase instanceof HttpDelete) {
 					//call handleString to close the session after sending the HTTP DELETE
 					handleString(TaskData.CLOSE_SESSION_CMD);
 
 				}
-			}
-			//   End if
-			//   Check the status code of the response (hint: call getStatusLine() of response, then getStatusCode() of statusline).
-			//   If status code is HttpStatus.SC_OK then request was completed OK.
-				response.getStatusLine();
-			if (statusline.getStatusCode() == HttpStatus.SC_OK) {
+				else {
+					//   End if
+					//   Check the status code of the response (hint: call getStatusLine() of response, then getStatusCode() of statusline).
+					//   If status code is HttpStatus.SC_OK then request was completed OK.
 
-			
-			//	       Check if the session string is null:
-			//	          Means we do not have session yet, so response should contain session id.
-			//	          So read the entity's content:
-			BufferedReader rd = new BufferedReader(new InputStreamReader(entity.getContent()));
-			String line = rd.readLine();
-			//	          If line is not null we have the session id
-			if (line != null) {
-				//Save the line to sessionStr member variable.
-				sessionStr = line;
-				//call handleString("SESSION " + sessionStr) to notify the protocol about this.
-				//Protocol understands the hardcoded "SESSION" to mean that we now got the session id and handles it.
-				//See protocol implementation for details
-				handleString("SESSION");
-			}
-			//End if
-			//Else (session string is NOT null
-			//We do have a session -- that means that we actually got some data from the server!
-			//Handle that data by calling handleInputStream with the entitys' content as the parameter
-			else {
-				handleInputStream(entity.getContent());
+					if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+
+
+						//	       Check if the session string is null:
+						//	          Means we do not have session yet, so response should contain session id.
+						//	          So read the entity's content:
+						
+							if (sessionStr == null) {
+								BufferedReader rd;
+
+
+								rd = new BufferedReader(new InputStreamReader(entity.getContent()));
+								String line = rd.readLine();
+								//	          If line is not null we have the session id
+								if (line != null) {
+									//Save the line to sessionStr member variable.
+									sessionStr = line;
+									//call handleString("SESSION " + sessionStr) to notify the protocol about this.
+									//Protocol understands the hardcoded "SESSION" to mean that we now got the session id and handles it.
+									//See protocol implementation for details
+									handleString("SESSION");
+								}
+								//End if
+								//Else (session string is NOT null
+								//We do have a session -- that means that we actually got some data from the server!
+								//Handle that data by calling handleInputStream with the entitys' content as the parameter
+
+
+							}
+							else {
+								handleInputStream(entity.getContent());
+							}
+					}
+				}
 			}
 		}
-		}
+		 catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}}
 		//End if session string is/was null
 		//End if status code was SC_OK
 		//End if entity was not null
 	}
+
 	private HttpRequestBase createRequest(TaskData task, URI Url) {
 		HttpRequestBase request = null;
 		if (null == sessionStr) {
