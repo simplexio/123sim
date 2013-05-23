@@ -40,9 +40,9 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 
 		Intent intent = new Intent(this, HomeControlService.class);
 		startService(intent);
-		
-		
-		
+
+
+
 	}
 
 	@Override
@@ -67,33 +67,33 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 	public boolean onOptionsItemSelected (MenuItem item) {
 		Intent intent = new Intent(this, SettingsActivity.class);
 		this.startActivity(intent);
-		
-		
+
+
 		switch (item.getItemId()) {
-	
-		   case R.id.server_connect: {
-		      connectToControlUnit();
-		      break;
-		   }
-		   case R.id.server_disconnect: {
-		      disconnectFromControlUnit(false);
-		      break;
-		   }
-		   case R.id.server_force_close: {
-		      disconnectFromControlUnit(true);
-		      break;
-		   }
-		   case R.id.server_refresh: {
-		   try {
-		      if (homeControlService != null) {
-		         Log.d(TAG, "Refreshing device data from server");
-		         homeControlService.getProtocol().getPath(null, "/");
-		      }
-		   } catch (InterruptedException e) {
-		      e.printStackTrace();
-		   }
-		   break;
-		   }}
+
+		case R.id.server_connect: {
+			connectToControlUnit();
+			break;
+		}
+		case R.id.server_disconnect: {
+			disconnectFromControlUnit(false);
+			break;
+		}
+		case R.id.server_force_close: {
+			disconnectFromControlUnit(true);
+			break;
+		}
+		case R.id.server_refresh: {
+			try {
+				if (homeControlService != null) {
+					Log.d(TAG, "Refreshing device data from server");
+					homeControlService.getProtocol().getPath(null, "/");
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			break;
+		}}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -156,60 +156,60 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 	}
 
 	private ServiceConnection mServiceConnection = new ServiceConnection() {
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-       Log.d(TAG, "Service connected!");
-       HomeControlBinder binder = (HomeControlBinder)service;
-       homeControlService = binder.getService();
-       homeControlService.setObserver(DeviceListActivity.this);
-       if (checkAutoConnect()) {
-    	   connectToControlUnit();
-       } 
-        DeviceAdapter.getInstance().setDevices(homeControlService.getDevices()); // Wiring done
-    }
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-       Log.d(TAG, "Service disconnected!");
-       DeviceAdapter.getInstance().setDevices(null);  // Unwiring done, adapter has no devices to show
-       homeControlService = null;
-     }
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			Log.d(TAG, "Service connected!");
+			HomeControlBinder binder = (HomeControlBinder)service;
+			homeControlService = binder.getService();
+			homeControlService.setObserver(DeviceListActivity.this);
+			if (checkAutoConnect()) {
+				connectToControlUnit();
+			} 
+			DeviceAdapter.getInstance().setDevices(homeControlService.getDevices()); // Wiring done
+		}
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			Log.d(TAG, "Service disconnected!");
+			DeviceAdapter.getInstance().setDevices(null);  // Unwiring done, adapter has no devices to show
+			homeControlService = null;
+		}
 
-};
+	};
 
-//<<< New method for the activity:
-private boolean checkAutoConnect() {
-SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-// Check what you use as the first parameter in your setting!!!
-boolean doConnect = sharedPref.getBoolean(SettingsActivity.KEY_PREF_CONNECT_TO_SERVER_SETTING, false);
-return doConnect;
-}
+	//<<< New method for the activity:
+	private boolean checkAutoConnect() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		// Check what you use as the first parameter in your setting!!!
+		boolean doConnect = sharedPref.getBoolean(SettingsActivity.KEY_PREF_CONNECT_TO_SERVER_SETTING, false);
+		return doConnect;
+	}
 
-//<<< New method for the activity:
-private void connectToControlUnit() {
-SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-// Again check which setting keys you use in your app and if your strings.xml has default address for server.
-String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
-if (homeControlService != null) {
-	//tähän addr tilalle http://....jne jos ei connect onnistu
-   homeControlService.getProtocol().startSession("http://ohap.opimobi.com:18000");
-}
-}
+	//<<< New method for the activity:
+	private void connectToControlUnit() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		// Again check which setting keys you use in your app and if your strings.xml has default address for server.
+		String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
+		if (homeControlService != null) {
+			//tähän addr tilalle http://....jne jos ei connect onnistu
+			homeControlService.getProtocol().startSession("http://ohap.opimobi.com:18000");
+		}
+	}
 
-@Override
-public void modelUpdated() {
-   if (homeControlService != null) {
-      DeviceAdapter.getInstance().setDevices(homeControlService.getDevices());
-      getListView().invalidateViews();
-   }
-}
+	@Override
+	public void modelUpdated() {
+		if (homeControlService != null) {
+			DeviceAdapter.getInstance().setDevices(homeControlService.getDevices());
+			getListView().invalidateViews();
+		}
+	}
 
-//And a new method for activity:
-private void disconnectFromControlUnit(boolean doForceClose) {
-Log.d(TAG, "Disconnect from control unit");
-if (homeControlService != null) {
-   homeControlService.getProtocol().endSession(doForceClose);
-}
-}
+	//And a new method for activity:
+	private void disconnectFromControlUnit(boolean doForceClose) {
+		Log.d(TAG, "Disconnect from control unit");
+		if (homeControlService != null) {
+			homeControlService.getProtocol().endSession(doForceClose);
+		}
+	}
 
 
 }

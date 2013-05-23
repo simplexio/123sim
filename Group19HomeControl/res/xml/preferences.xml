@@ -7,7 +7,7 @@
                     
     <CheckBoxPreference 
         android:key="connect_to_server_check"
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:summaryOn="@string/Checked"
         android:summaryOff="@string/Unchecked" />
    

@@ -29,7 +29,7 @@ public class HomeControlService extends Service implements OHAPListener{
 	private final HomeControlBinder binder = new HomeControlBinder();
 	private DeviceContainer devices = new DeviceContainer(null, "container-1", "No connection with Home", null, null);
 	private OHAPParser parser = null;
-	private String json = new String("{ \"container:room-1\": { \"name\": \"GF301-1\", \"description\": \"Antti's office\", \"location\": { \"latitude\": 65.058668, \"longitude\": 25.564338, \"altitude\": 100.0 }, 		\"sensor:switch-1\": { \"name\": \"Light switch\", \"description\": \"The light switch next to the door\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564338, \"altitude\": 100.6 }},		\"sensor:temperature-1\": { \"name\": \"Room temperature\", \"description\": \"The current temperature in the room\", \"state\": { \"type\": \"decimal\", \"value\": 21.1, \"range\": [-10.0, 60.0], \"unit\": \"Celcius\", \"unit-abbreviation\": \"C\" },\"location\": { \"latitude\": 65.058668, \"longitude\": 25.564339,\"altitude\": 101.2 } },		\"actuator:light-1\": { \"name\": \"Ceiling lamp\", \"description\": \"The fluerecent lamp in the ceiling\", \"state\": { \"type\": \"binary\", \"value\": false }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564339, \"altitude\": 102.6  } } }}");
+	private String json = new String("{ \"container:room-1\": { \"name\": \"GF301-1\", \"description\": \"Antti's office\", \"location\": { \"latitude\": 65.058668, \"longitude\": 25.564338, \"altitude\": 100.0 }, 		\"sensor:switch-1\": { \"name\": \"Light switch\", \"description\": \"The light switch next to the door\", \"state\": { \"type\": \"binary\", \"value\": true }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564338, \"altitude\": 100.6 }},		\"sensor:temperature-1\": { \"name\": \"Room temperature\", \"description\": \"The current temperature in the room\", \"state\": { \"type\": \"decimal\", \"value\": 21.1, \"range\": [-10.0, 60.0], \"unit\": \"Celcius\", \"unit-abbreviation\": \"C\" },\"location\": { \"latitude\": 65.058668, \"longitude\": 25.564339,\"altitude\": 101.2 } },		\"actuator:light-1\": { \"name\": \"Ceiling lamp\", \"description\": \"The fluerecent lamp in the ceiling\", \"state\": { \"type\": \"binary\", \"value\": false }, \"location\": { \"latitude\": 65.058669, \"longitude\": 25.564339, \"altitude\": 102.6  } }  \"actuator:heating-1\": { \"name\": \"Room temperature target\", \"description\": \"Target temperature of the heating\", \"state\": { \"type\": \"decimal\", \"value\": 22.000000, \"range\": [-10.000000, 60.000000], \"unit\": \"Celcius\", \"unit-abbreviation\": \"C\" }, \"location\": { \"latitude\": 65.058668, \"longitude\": 25.564338, \"altitude\": 100.000000 }}}}");
 	private OHAPInterface protocol = null;
 	private Handler eventHandler = new Handler();
 	private HomeControlServiceObserver observer = null;
@@ -66,8 +66,8 @@ public class HomeControlService extends Service implements OHAPListener{
 	}
 
 	public void debugInitialize () {
-		//lauseella kutsutaan ylläolevassta json stringistä olevat tiedot
 		try {
+			Log.d(TAG, "Get data from json");
 			devices = (DeviceContainer)parser.parseString(json);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -88,6 +88,7 @@ public class HomeControlService extends Service implements OHAPListener{
 
 	// Then call this method when the device state has changed (in DeviceActivity propably):
 	public void deviceStateChanged(ConcreteDevice device) {
+		Log.d(TAG, "Device state has changed");
 		String path = ohapBuilder.createPath(device, true);
 		if (null != path) {
 			try {
@@ -139,11 +140,11 @@ public class HomeControlService extends Service implements OHAPListener{
 		});
 
 		if (null != observer) {
-				observer.modelUpdated();
-			}
-
+			observer.modelUpdated();
 		}
-	
+
+	}
+
 	@Override
 	public void errorMessageFromServer(final String msg) {
 		eventHandler.post(new Runnable() {

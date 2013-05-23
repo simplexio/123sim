@@ -63,6 +63,22 @@ import fi.oulu.tol.group19project.model.DeviceContainer;
 	        "altitude": 102.6
 	      }
 	    }
+	    "actuator:heating-1": {
+  			"name": "Root temperature target",
+  			"description": "Target temperature of the heating",
+  			"state": {
+    			"type": "decimal",
+    			"value": 22.000000,
+    			"range": [-10.000000, 60.000000],
+    			"unit": "Celcius",
+    			"unit-abbreviation": "C"
+  			},
+  			"location": {
+    			"latitude": 65.058668,
+    			"longitude": 25.564338,
+    			"altitude": 100.000000
+  			}
+		}
 	  }
 	}
 
@@ -155,13 +171,13 @@ public class OHAPParser {
 		String unit = null;
 		String unitabbreviation = null;
 		Double value = null;
-		
+
 		ConcreteDevice.ValueType valueType = ConcreteDevice.ValueType.BINARY;
 		Double minValue = null;
 		Double maxValue = null;
 
-		
-		
+
+
 		JSONObject stateObject = object.optJSONObject("state");
 		if (null != stateObject) {
 			// We have the state structure there since stateObject is not null.
@@ -222,26 +238,26 @@ public class OHAPParser {
 			Log.d(TAG, "No state information in device");
 		}
 
-	
 
-	if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
-		Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
-		thisDevice= new DeviceContainer(null, name, null, description, null);
-		handleDevice(thisDevice, object);
-	} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
-		Log.d(TAG, "Creating a child: " + name);
 
-		thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
-	} else {
-		// Not supported.
-		throw new JSONException("Invalid JSON structure");
+		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
+			Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
+			thisDevice= new DeviceContainer(null, name, null, description, null);
+			handleDevice(thisDevice, object);
+		} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
+			Log.d(TAG, "Creating a child: " + name);
+
+			thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
+		} else {
+			// Not supported.
+			throw new JSONException("Invalid JSON structure");
+		}
+
+
+
+
+		return thisDevice;
 	}
-
-	
-
-
-	return thisDevice;
-}
 
 
 
