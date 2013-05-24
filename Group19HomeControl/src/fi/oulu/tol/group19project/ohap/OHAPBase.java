@@ -50,12 +50,12 @@ public abstract class OHAPBase implements Runnable {
 		Connecting, 
 		/** Protocol has now a session with the server and can send and receive actual OHAP commands. */
 		Connected
-		};
+	};
 	/**
 	 * The observer which is notified of the protocol events.
 	 */
 	protected OHAPListener observer = null;
-	
+
 	/**
 	 * Protocol state variable.
 	 */
@@ -123,7 +123,7 @@ public abstract class OHAPBase implements Runnable {
 	private static final int CONNECTION_ATTEMPTS = 1;
 	/** Connection attempt counter, used in making the first connection if it fails.*/
 	private int connectionCount = CONNECTION_ATTEMPTS;
-	
+
 
 	/**
 	 * Use the method to check if the protocol has been initialized (not yet connected).
@@ -142,7 +142,7 @@ public abstract class OHAPBase implements Runnable {
 		return running;
 	}
 
-	
+
 	//////////////////////////////////////
 	// Private part starts from there!  //
 	//////////////////////////////////////
@@ -215,6 +215,8 @@ public abstract class OHAPBase implements Runnable {
 					break;
 				}
 				case Connected: {
+					if (results.size() == 0)
+						Thread.sleep(100);
 					Log.d(TAG, "Protocol connected, checks task and results queues.");
 					if (taskQueue.peek() == null && !firstTask.isBusy() && !secondTask.isBusy()) {
 						Log.d(TAG, "No tasks in queues, put empty request in session task queue.");
@@ -253,6 +255,9 @@ public abstract class OHAPBase implements Runnable {
 	 * @param serverAddress The URL of the server.
 	 */
 	protected void initialize(String serverAddress) {
+		if (hasSession() && this.serverAddress != null && this.serverAddress.equalsIgnoreCase(serverAddress)) {
+			return;
+		}
 		if (state != ProtocolState.Uninitialized) {
 			doShutDown(false);
 		}
@@ -277,7 +282,7 @@ public abstract class OHAPBase implements Runnable {
 	 * @param forceShutdown Should the protocol be closed down forcefully or not
 	 */
 	protected abstract void doShutDown(boolean forceShutdown);
-	
+
 	/**
 	 * Stops the protocol:<p>
 	 * <ul>

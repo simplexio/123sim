@@ -10,13 +10,15 @@
         android:defaultValue="false"
         android:summaryOn="@string/Checked"
         android:summaryOff="@string/Unchecked" />
-   
-    <EditTextPreference 
+    
+        <EditTextPreference 
         android:key="server_address"
-        android:defaultValue=""
+        android:defaultValue="http://ohap.opimobi.com:18000/"
         android:dialogTitle="@string/Unit_address" />
     
-        </PreferenceCategory>
+       
+   
+ </PreferenceCategory>
     
 
 </PreferenceScreen>
