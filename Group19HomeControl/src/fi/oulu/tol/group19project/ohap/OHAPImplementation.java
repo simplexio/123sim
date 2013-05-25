@@ -1,12 +1,15 @@
 package fi.oulu.tol.group19project.ohap;
 
+import android.util.Log;
+
 
 public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 	private static OHAPImplementation instance = null;
+	private final static String TAG = "OHAPImplementation";
 	private OHAPImplementation() {
-		
+
 	}
-	
+
 	@Override
 	public void setObserver(OHAPListener observer) {
 		this.observer=observer;
@@ -20,9 +23,11 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 
 	@Override
 	public void endSession(boolean forceStop) {
+		Log.d(TAG, "Check if there is a session");
 		if(hasSession()) {
-			
+
 			try {
+				Log.d(TAG, "There is a sesssion");
 				taskQueue.put(new TaskData(null, TaskData.CLOSE_SESSION_CMD, null));
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -31,6 +36,7 @@ public class OHAPImplementation extends OHAPBase implements OHAPInterface {
 
 		}
 		else {
+			Log.d(TAG, "No session");
 			doStop();
 			errorMessageToClient("No session");
 		}
