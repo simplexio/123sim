@@ -74,6 +74,12 @@ public class HomeControlService extends Service implements OHAPListener{
 		}
 	}
 
+	/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
+	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
+	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
+	devices.add(cont);
+
+	}*/
 
 	public DeviceContainer getDevices() { 
 		return devices;
@@ -95,20 +101,27 @@ public class HomeControlService extends Service implements OHAPListener{
 
 	@Override
 	public void sessionInitiatedSuccessfully() {
-		try {
-			protocol.getPath(null,"/");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		eventHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Log.d(TAG, "In: sessionInitiatedSuccessfully");
+					protocol.getPath(null,"/");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-	}
+			}});}
 
 	@Override
 	public void sessionEnded() {
-		devices = null;
+		eventHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				devices = null;
 
-	}
+	}});}
 
 	@Override
 	public void contentFromServerArrived(final String content) {
@@ -122,7 +135,6 @@ public class HomeControlService extends Service implements OHAPListener{
 
 					}
 					else {
-
 						DeviceContainer newData = (DeviceContainer)parser.parseString(content);
 						devices.updateValues(newData);
 					}
@@ -155,9 +167,12 @@ public class HomeControlService extends Service implements OHAPListener{
 
 	@Override
 	public void okFromServerArrived() {
-		// TODO Auto-generated method stub
+		eventHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(TAG, "Server replied with OK to a request");
 
-	}
+			}});}
 
 
 	public OHAPInterface getProtocol() {

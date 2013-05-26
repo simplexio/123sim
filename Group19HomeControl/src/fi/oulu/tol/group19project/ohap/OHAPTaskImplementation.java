@@ -31,6 +31,7 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 		client = AndroidHttpClient.newInstance("JannasHttpClient");
 		HttpParams parameters = client.getParams();
 		HttpConnectionParams.setSoTimeout(parameters, 0); // timeout zero means we wait forever.
+		HttpConnectionParams.setConnectionTimeout(parameters, 0);
 	}
 
 	@Override
@@ -40,6 +41,9 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 	}
 
 	protected void prepareAndExecuteRequest(TaskData task) throws InterruptedException {
+		synchronized (this) {
+			isBusy = true;
+		}
 		//Declare a HttpRequestBase variable and set it to null.
 		HttpRequestBase requestBase = null;
 		//Using the task parameter, call createUrl (a method you have been given).
@@ -55,56 +59,53 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 		//If the request object is null, return away from there
 		//   -- we cannot continue 'cause correct request couldn't be created!
 		if (requestBase == null) {
-			Log.d(threadName(), "cannot continue 'cause correct request couldn't be created!");
+			//??
+			synchronized (this) {
+				isBusy = false;
+			}
 			return;
 		}
 		//Otherwise, we continue:
 		//Create a HttpHost object using URI's getHost, getPort and getScheme methods.
 		//Set this task object busy at this point, since now we're going to execute the http request and it may take time:
 		else {
-			Log.d(threadName(), "Crate a HttpHost object");
+			//??
 			HttpHost host = new HttpHost(value.getHost(), value.getPort(), value.getScheme());
-			synchronized (this) {
-				isBusy = true;
-			}
+
 			//Declare a HttpResponse variable and set it to null.
 			try {
-				HttpResponse response = null;
-				//** Now: execute the request using the android http client, with the host and request parameters! **
-				Log.d(threadName(), "Execute the request");
-				response = client.execute(host, requestBase);
-				//We will only get to this line when the server responds
-				// -- we may have to wait for seconds, minutes, hours... depending on the server!
-				//Then we set this object not busy:
-				Log.d(threadName(), "This object not busy");
-				synchronized (this) {
-					isBusy = false;
-				}
-				//And now we are ready to check what the server response is...
-				//Delcare a HttpEntity object and get that from the response using getEntity().
-				Log.d(threadName(), "Check what the server response is");
-				HttpEntity entity = response.getEntity();
+			HttpResponse response = null;
+			//** Now: execute the request using the android http client, with the host and request parameters! **
+			response = client.execute(host, requestBase);
+			//We will only get to this line when the server responds
+			// -- we may have to wait for seconds, minutes, hours... depending on the server!
+			//Then we set this object not busy:
+
+			//And now we are ready to check what the server response is...
+			//Delcare a HttpEntity object and get that from the response using getEntity().
+			HttpEntity entity = response.getEntity();
+			//??
+			//If the entity is not null
+			if (entity != null) {
+				//   If the request instace was HttpDelete
 				//??
-				//If the entity is not null
-				if (entity != null) {
-					//   If the request instace was HttpDelete
-					if (requestBase instanceof HttpDelete) {
-						//call handleString to close the session after sending the HTTP DELETE
-						handleString(TaskData.CLOSE_SESSION_CMD);
+				if (requestBase instanceof HttpDelete) {
+					//call handleString to close the session after sending the HTTP DELETE
+					handleString(TaskData.CLOSE_SESSION_CMD);
 
-					}
-					else {
-						//   End if
-						//   Check the status code of the response (hint: call getStatusLine() of response, then getStatusCode() of statusline).
-						//   If status code is HttpStatus.SC_OK then request was completed OK.
+				}
+				else {
+					//   End if
+					//   Check the status code of the response (hint: call getStatusLine() of response, then getStatusCode() of statusline).
+					//   If status code is HttpStatus.SC_OK then request was completed OK.
 
-						if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 
 
-							//	       Check if the session string is null:
-							//	          Means we do not have session yet, so response should contain session id.
-							//	          So read the entity's content:
-
+						//	       Check if the session string is null:
+						//	          Means we do not have session yet, so response should contain session id.
+						//	          So read the entity's content:
+						
 							if (sessionStr == null) {
 								BufferedReader rd;
 
@@ -130,21 +131,28 @@ public class OHAPTaskImplementation extends OHAPTaskBase {
 							else {
 								handleInputStream(entity.getContent());
 							}
-						}
 					}
 				}
 			}
-			catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}}
+		}
+		 catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			String error = "IOException!!";
+		      Log.d(threadName(), error);
+		      handleString("ERROR " + error);
+			e.printStackTrace();
+		}}
 		//End if session string is/was null
 		//End if status code was SC_OK
 		//End if entity was not null
+		synchronized (this) {
+			isBusy = false;
+		}
 	}
+	
 
 	private HttpRequestBase createRequest(TaskData task, URI Url) {
 		HttpRequestBase request = null;

@@ -22,10 +22,12 @@ public class DeviceActivity extends Activity implements OnSeekBarChangeListener 
 
 	private AbstractDevice device = null;
 	public static final String KEY_DEVICE_ID = "device-id";
+	private static final String TAG = "Group19HomeControl";
 	private HomeControlService homeControlService;
 
 
 	protected void onCreate(Bundle savedInstanceState, int position) {
+		Log.d(TAG, "In DeviceActivity.onCreate");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device);
 		// Prepare the seekbar event listener.
