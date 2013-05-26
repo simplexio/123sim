@@ -74,12 +74,6 @@ public class HomeControlService extends Service implements OHAPListener{
 		}
 	}
 
-	/*devices.add(new ConcreteDevice(null, Type.SENSOR, "id-for-sersor-1", "Light sensor", "Outside in back yard", null, ConcreteDevice.ValueType.DECIMAL, 800.0, 10.0, 4000.0, "lumen"));
-	DeviceContainer cont = new DeviceContainer(null, "container-2", "Restroom", "Loo for poo", null);
-	cont.add(new ConcreteDevice(null, Type.ACTUATOR, "id-for-actuator-1", "Door lock", "Loo door", null, ConcreteDevice.ValueType.BINARY, 0.0, 0.0, 1.0, null));
-	devices.add(cont);
-
-	}*/
 
 	public DeviceContainer getDevices() { 
 		return devices;
