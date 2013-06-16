@@ -1,5 +1,6 @@
 package fi.oulu.tol.group19project;
 
+import fi.oulu.tol.group19project.DeviceActivity;
 import fi.oulu.tol.group19project.HomeControlService.HomeControlBinder;
 import fi.oulu.tol.group19project.model.AbstractDevice;
 import android.os.Bundle;
@@ -190,7 +191,7 @@ SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(thi
 String addr = sharedPref.getString(SettingsActivity.KEY_PREF_SERVER_ADDRESS, getString(R.string.default_server_address));
 if (homeControlService != null) {
     Log.d(TAG, "Connection to control unit");
-	//tähän addr tilalle http://....jne jos ei connect onnistu
+	// addr tilalle http://....jne jos ei connect onnistu
    homeControlService.getProtocol().startSession("http://ohap.opimobi.com:18000");
 }
 }

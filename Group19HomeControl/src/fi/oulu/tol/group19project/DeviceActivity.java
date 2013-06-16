@@ -1,8 +1,11 @@
 package fi.oulu.tol.group19project;
 
+import fi.oulu.tol.group19project.DeviceAdapter;
+import fi.oulu.tol.group19project.HomeControlService;
 import fi.oulu.tol.group19project.HomeControlService.HomeControlBinder;
 import fi.oulu.tol.group19project.model.AbstractDevice;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.app.Activity;

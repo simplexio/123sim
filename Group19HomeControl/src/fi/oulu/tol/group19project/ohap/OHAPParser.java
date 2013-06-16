@@ -5,91 +5,92 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import android.util.Log;
 import fi.oulu.tol.group19project.model.AbstractDevice;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
-import fi.oulu.tol.group19project.model.ConcreteDevice.ValueType;
 import fi.oulu.tol.group19project.model.DeviceContainer;
+import fi.oulu.tol.group19project.model.ConcreteDevice.ValueType;
+
+
+import android.util.Log;
 
 /*
-{
-	  "container:room-1": {
-	    "name": "GF301-1",
-	    "description": "Antti's office",
-	    "location": {
-	      "latitude": 65.058668,
-	      "longitude": 25.564338,
-	      "altitude": 100.0
-	    },
-	    "sensor:switch-1": {
-	      "name": "Light switch",
-	      "description": "The light switch next to the door",
-	      "state": {
-	        "type": "binary",
-	        "value": true
-	      },
-	      "location": {
-	        "latitude": 65.058669,
-	        "longitude": 25.564338,
-	        "altitude": 100.6
-	      }
-	    },
-	    "sensor:temperature-1": {
-	      "name": "Room temperature",
-	      "description": "The current temperature in the room",
-	      "state": {
-	        "type": "decimal",
-	        "value": 21.1,
-	        "range": [-10.0, 60.0],
-	        "unit": "Celcius",
-	        "unit-abbreviation": "C"
-	      },
-	      "location": {
-	        "latitude": 65.058668,
-	        "longitude": 25.564339,
-	        "altitude": 101.2
-	      }
-	    },
-	    "actuator:light-1": {
-	      "name": "Ceiling lamp",
-	      "description": "The fluerecent lamp in the ceiling",
-	      "state": {
-	        "type": "binary",
-	        "value": true
-	      },
-	      "location": {
-	        "latitude": 65.058669,
-	        "longitude": 25.564339,
-	        "altitude": 102.6
-	      }
-	    }
-	    "actuator:heating-1": {
-  			"name": "Root temperature target",
-  			"description": "Target temperature of the heating",
-  			"state": {
-    			"type": "decimal",
-    			"value": 22.000000,
-    			"range": [-10.000000, 60.000000],
-    			"unit": "Celcius",
-    			"unit-abbreviation": "C"
-  			},
-  			"location": {
-    			"latitude": 65.058668,
-    			"longitude": 25.564338,
-    			"altitude": 100.000000
-  			}
-		}
-	  }
-	}
+ {
+ "container:room-1": {
+ "name": "GF301-1",
+ "description": "Antti's office",
+ "location": {
+ "latitude": 65.058668,
+ "longitude": 25.564338,
+ "altitude": 100.0
+ },
+ "sensor:switch-1": {
+ "name": "Light switch",
+ "description": "The light switch next to the door",
+ "state": {
+ "type": "binary",
+ "value": true
+ },
+ "location": {
+ "latitude": 65.058669,
+ "longitude": 25.564338,
+ "altitude": 100.6
+ }
+ },
+ "sensor:temperature-1": {
+ "name": "Room temperature",
+ "description": "The current temperature in the room",
+ "state": {
+ "type": "decimal",
+ "value": 21.1,
+ "range": [-10.0, 60.0],
+ "unit": "Celcius",
+ "unit-abbreviation": "C"
+ },
+ "location": {
+ "latitude": 65.058668,
+ "longitude": 25.564339,
+ "altitude": 101.2
+ }
+ },
+ "actuator:light-1": {
+ "name": "Ceiling lamp",
+ "description": "The fluerecent lamp in the ceiling",
+ "state": {
+ "type": "binary",
+ "value": true
+ },
+ "location": {
+ "latitude": 65.058669,
+ "longitude": 25.564339,
+ "altitude": 102.6
+ }
+ }
+ "actuator:heating-1": {
+ "name": "Root temperature target",
+ "description": "Target temperature of the heating",
+ "state": {
+ "type": "decimal",
+ "value": 22.000000,
+ "range": [-10.000000, 60.000000],
+ "unit": "Celcius",
+ "unit-abbreviation": "C"
+ },
+ "location": {
+ "latitude": 65.058668,
+ "longitude": 25.564338,
+ "altitude": 100.000000
+ }
+ }
+ }
+ }
 
  */
 
 public class OHAPParser {
 	private final static String TAG = "DeviceParser";
-	private final static String CONTAINER= "container";
-	private final static String SENSOR= "sensor";
+	private final static String CONTAINER = "container";
+	private final static String SENSOR = "sensor";
 	private final static String ACTUATOR = "actuator";
-
 
 	private final static String NAME = "name";
 	private final static String DESCRIPTION = "description";
@@ -104,18 +105,16 @@ public class OHAPParser {
 	private final static String UNIT = "unit";
 	private final static String UNITABBREVIATION = "unit-abbreviation";
 
-
-
 	public AbstractDevice parseString(String content) throws JSONException {
 		Log.d(TAG, "Starting to parse the String...");
 		JSONObject object = (JSONObject) new JSONTokener(content).nextValue();
-		AbstractDevice ad = handleDevice (null, object);
+		AbstractDevice ad = handleDevice(null, object);
 		Log.d(TAG, "...parsed the input string.");
 		return ad;
 	}
 
-
-	private AbstractDevice handleDevice(AbstractDevice parent, JSONObject object) throws JSONException {
+	private AbstractDevice handleDevice(AbstractDevice parent, JSONObject object)
+			throws JSONException {
 		AbstractDevice newDevice = null;
 		JSONArray names = object.names();
 		Log.d(TAG, "-- In handleDevice");
@@ -127,12 +126,13 @@ public class OHAPParser {
 		if (null != names) {
 			// Get the first name in the names array.
 			String deviceId = null;
-			for (int i = 0; i<names.length(); i++) {
+			for (int i = 0; i < names.length(); i++) {
 				deviceId = names.getString(i);
 				String elements[] = deviceId.split(":");
 				Log.d(TAG, "Check if this is a Device: " + deviceId);
-				if (elements[0].equalsIgnoreCase(CONTAINER) ||
-						elements[0].equalsIgnoreCase(SENSOR) || elements[0].equalsIgnoreCase(ACTUATOR)) {
+				if (elements[0].equalsIgnoreCase(CONTAINER)
+						|| elements[0].equalsIgnoreCase(SENSOR)
+						|| elements[0].equalsIgnoreCase(ACTUATOR)) {
 					JSONObject newObject = object.getJSONObject(deviceId);
 					Log.d(TAG, "Try to read the device in readDevice...");
 					newDevice = readDevice(elements[0], elements[1], newObject);
@@ -151,7 +151,8 @@ public class OHAPParser {
 		return parent;
 	}
 
-	private AbstractDevice readDevice(String deviceContainerType, String deviceContainerId, JSONObject object) throws JSONException {
+	private AbstractDevice readDevice(String deviceContainerType,
+			String deviceContainerId, JSONObject object) throws JSONException {
 
 		AbstractDevice thisDevice = null;
 
@@ -167,7 +168,7 @@ public class OHAPParser {
 		Double altitude = null;
 		String state = null;
 		String type = null;
-		Double []range = null;
+		Double[] range = null;
 		String unit = null;
 		String unitabbreviation = null;
 		Double value = null;
@@ -175,8 +176,6 @@ public class OHAPParser {
 		ConcreteDevice.ValueType valueType = ConcreteDevice.ValueType.BINARY;
 		Double minValue = null;
 		Double maxValue = null;
-
-
 
 		JSONObject stateObject = object.optJSONObject("state");
 		if (null != stateObject) {
@@ -187,7 +186,7 @@ public class OHAPParser {
 				if (obj instanceof Boolean) {
 					// OK, value was boolean, either true or false. Handle that!
 					Log.d(TAG, "Boolean value: " + obj);
-					boolean boolValue = (Boolean)obj;
+					boolean boolValue = (Boolean) obj;
 					valueType = ConcreteDevice.ValueType.BINARY;
 					if (boolValue) {
 						value = 1.0;
@@ -197,11 +196,12 @@ public class OHAPParser {
 					minValue = 0.0;
 					maxValue = 1.0;
 				} else if (obj instanceof Double) {
-					// OK now we know "value" was decimal: "value" : 21.1 for example.
+					// OK now we know "value" was decimal: "value" : 21.1 for
+					// example.
 					valueType = ConcreteDevice.ValueType.DECIMAL;
 					Log.d(TAG, "Decimal value information found on device");
-					double val = (Double)obj;
-					Log.d(TAG, "Value of state is: "+val);
+					double val = (Double) obj;
+					Log.d(TAG, "Value of state is: " + val);
 					value = Double.valueOf(val);
 					if (value == Double.NaN) {
 						value = null;
@@ -222,7 +222,7 @@ public class OHAPParser {
 						}
 					}
 				} else {
-					Log.d(TAG, "Something odd found!?: " +obj);
+					Log.d(TAG, "Something odd found!?: " + obj);
 				}
 			}
 			// Then the unit of the value:
@@ -238,30 +238,25 @@ public class OHAPParser {
 			Log.d(TAG, "No state information in device");
 		}
 
-
-
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
-			Log.d(TAG, "Creating a parent: " + name + " and trying to parse children");
-			thisDevice= new DeviceContainer(null, name, null, description, null);
+			Log.d(TAG, "Creating a parent: " + name
+					+ " and trying to parse children");
+			thisDevice = new DeviceContainer(null, name, null, description,
+					null);
 			handleDevice(thisDevice, object);
-		} else if (deviceContainerType.equalsIgnoreCase(SENSOR) || deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
+		} else if (deviceContainerType.equalsIgnoreCase(SENSOR)
+				|| deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
 			Log.d(TAG, "Creating a child: " + name);
 
-			thisDevice = new ConcreteDevice(null, null, name, null, description, null, null, value, value, value, unitabbreviation);
+			thisDevice = new ConcreteDevice(null, null, name, null,
+					description, null, null, value, value, value,
+					unitabbreviation);
 		} else {
 			// Not supported.
 			throw new JSONException("Invalid JSON structure");
 		}
 
-
-
-
 		return thisDevice;
 	}
 
-
-
 }
-
-
-

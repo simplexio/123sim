@@ -3,15 +3,17 @@ package fi.oulu.tol.group19project;
 
 import org.json.JSONException;
 
-import fi.oulu.tol.group19project.model.AbstractDevice.Type;
 import fi.oulu.tol.group19project.model.ConcreteDevice;
 import fi.oulu.tol.group19project.model.DeviceContainer;
-import fi.oulu.tol.group19project.ohap.OHAPParser;
-import fi.oulu.tol.group19project.ohap.OHAPPathBuilder;
+import fi.oulu.tol.group19project.model.AbstractDevice.Type;
 import fi.oulu.tol.group19project.ohap.OHAPImplementation;
 import fi.oulu.tol.group19project.ohap.OHAPInterface;
 import fi.oulu.tol.group19project.ohap.OHAPListener;
+import fi.oulu.tol.group19project.ohap.OHAPParser;
+import fi.oulu.tol.group19project.ohap.OHAPPathBuilder;
 import fi.oulu.tol.group19project.ohap.TaskData;
+
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;

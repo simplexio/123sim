@@ -40,7 +40,7 @@
     </activity>
 
     <service
-        android:name="HomeControlService"
+        android:name="fi.oulu.tol.group19project.HomeControlService"
         android:enabled="true"
         android:exported="false" />
 
