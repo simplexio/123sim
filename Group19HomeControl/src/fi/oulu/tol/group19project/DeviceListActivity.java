@@ -6,6 +6,9 @@ import fi.oulu.tol.group19project.model.AbstractDevice;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.Handler;
+
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -29,18 +32,21 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 	private static final String TAG = "Group19HomeControl";
 	//public static final int DEBUG = 3;
 	private HomeControlService homeControlService;
-
+    Handler handler ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "In DeviceListActivity.onCreate");
 		super.onCreate(savedInstanceState);
+  //      setContentView(R.layout.activity_device_list);
 		DeviceAdapter adapter = DeviceAdapter.getInstance();
 		adapter.setInflater(getLayoutInflater());
 		this.setListAdapter(adapter);
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        // handler handler
+        handler = new Handler();
 
-		Intent intent = new Intent(this, HomeControlService.class);
+        Intent intent = new Intent(this, HomeControlService.class);
 		startService(intent);
 		
 		
@@ -200,7 +206,22 @@ if (homeControlService != null) {
 public void modelUpdated() {
    if (homeControlService != null) {
       DeviceAdapter.getInstance().setDevices(homeControlService.getDevices());
-      getListView().invalidateViews();
+       // TODO: Tämä on väärässä theadissa, pitää olla alkupäisessa joka omistaa tämän
+
+
+      Runnable runnable;
+
+      runnable = new Runnable() {
+
+          public void run() {
+
+              getListView().invalidateViews();
+          }
+      };
+
+       handler.postDelayed(runnable, 50);
+
+
    }
 }
 

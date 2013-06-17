@@ -45,7 +45,7 @@ public class HomeControlService extends Service implements OHAPListener{
 		Log.d(TAG, "In Service.onCreate");
 		super.onCreate();
 		parser = new OHAPParser();
-		debugInitialize();
+		//debugInitialize();
 		devices = null;
 		protocol = OHAPImplementation.getInstance();
 		protocol.setObserver(this);
@@ -138,7 +138,10 @@ public class HomeControlService extends Service implements OHAPListener{
 					}
 					else {
 						DeviceContainer newData = (DeviceContainer)parser.parseString(content);
+                        // null ?
+                        if(newData != null)  {
 						devices.updateValues(newData);
+                        }
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
