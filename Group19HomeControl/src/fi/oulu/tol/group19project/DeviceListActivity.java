@@ -73,11 +73,17 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 
 	@Override
 	public boolean onOptionsItemSelected (MenuItem item) {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		this.startActivity(intent);
+        // Väärässä kohttaa
+		// Intent intent = new Intent(this, SettingsActivity.class);
+		// this.startActivity(intent);
 		
 		
 		switch (item.getItemId()) {
+            case R.id.action_settings:{
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivity(intent);
+                break;
+            }
 	
 		   case R.id.server_connect: {
 		      connectToControlUnit();
