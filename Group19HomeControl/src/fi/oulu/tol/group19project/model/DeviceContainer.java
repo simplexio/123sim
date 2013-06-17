@@ -128,6 +128,7 @@ public class DeviceContainer extends AbstractDevice {
 		// TODO: if a device is not found, it should be added to the
 		// structure in the correct place as a new device.
 		// If this device is the one in fromDevice...
+        // TODO: tullee null id , eli device alustettu väärin
 		if (getId().equals(fromDevice.getId())) {
 			// ...update my values. Basically only the base class 
 			// member some variables to update.
