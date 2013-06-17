@@ -22,6 +22,7 @@
 	<string name="server_force_close">Server Force Close</string>
 	<string name="server_refresh">Server Refresh</string>
 	<string name="server_said_error">Error from server</string>
+    <string name="server_address">default server</string>
     
 
 </resources>

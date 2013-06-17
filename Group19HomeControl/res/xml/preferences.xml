@@ -13,6 +13,7 @@
     
         <EditTextPreference 
         android:key="server_address"
+        android:summaryOn="@string/server_address"
         android:defaultValue="http://ohap.opimobi.com:18000/"
         android:dialogTitle="@string/Unit_address" />
     
