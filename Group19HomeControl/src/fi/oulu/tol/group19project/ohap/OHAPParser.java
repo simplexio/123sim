@@ -245,6 +245,11 @@ public class OHAPParser {
             if(obj instanceof String){
                 name = (String)  obj ;
             }
+            // voi uudelleen käyttää mutten kehtaa
+            Object obj2 = object.opt("description");
+            if(obj instanceof String){
+                description = (String)  obj ;
+            }
 
 
             Log.d(TAG, "Creating a parent: " + name
@@ -258,6 +263,11 @@ public class OHAPParser {
             Object obj = object.opt("name");
             if(obj instanceof String){
                 name = (String)  obj ;
+            }
+            // voi uudelleen käyttää mutten kehtaa
+            Object obj2 = object.opt("description");
+            if(obj instanceof String){
+                description = (String)  obj ;
             }
 
             Log.d(TAG, "Creating a child: " + name);
