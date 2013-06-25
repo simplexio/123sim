@@ -313,7 +313,7 @@ public class OHAPParser {
                 type = "sensor" ;
             }
             if (deviceContainerType.equalsIgnoreCase(ACTUATOR)){
-                type = "sensor" ;
+                type = "actuator" ;
             }
 
             Object obj = object.opt("name");
