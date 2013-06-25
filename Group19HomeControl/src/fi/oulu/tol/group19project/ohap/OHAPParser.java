@@ -237,6 +237,56 @@ public class OHAPParser {
 		} else {
 			Log.d(TAG, "No state information in device");
 		}
+        JSONObject locationObject = object.optJSONObject("location");
+        if(locationObject != null){
+            Object obj = locationObject.opt("longitude");
+            if (null != obj) {
+                if (obj instanceof Double) {
+                    // OK now we know "value" was decimal: "value" : 21.1 for
+                    // example.
+                    valueType = ConcreteDevice.ValueType.DECIMAL;
+                    Log.d(TAG, "Decimal value information found on device");
+                    double val = (Double) obj;
+                    Log.d(TAG, "Value of state is: " + val);
+                    longitude  = Double.valueOf(val);
+                    if (longitude == Double.NaN) {
+                        longitude = null;
+                    }
+                }
+            }
+            obj = null;
+             obj = locationObject.opt("latitude");
+            if (null != obj) {
+                if (obj instanceof Double) {
+                    // OK now we know "value" was decimal: "value" : 21.1 for
+                    // example.
+                    valueType = ConcreteDevice.ValueType.DECIMAL;
+                    Log.d(TAG, "Decimal value information found on device");
+                    double val = (Double) obj;
+                    Log.d(TAG, "Value of state is: " + val);
+                    latitude  = Double.valueOf(val);
+                    if (latitude == Double.NaN) {
+                        latitude = null;
+                    }
+                }
+            }
+            obj = null;
+            obj = locationObject.opt("altitude");
+            if (null != obj) {
+                if (obj instanceof Double) {
+                    // OK now we know "value" was decimal: "value" : 21.1 for
+                    // example.
+                    valueType = ConcreteDevice.ValueType.DECIMAL;
+                    Log.d(TAG, "Decimal value information found on device");
+                    double val = (Double) obj;
+                    Log.d(TAG, "Value of state is: " + val);
+                    altitude  = Double.valueOf(val);
+                    if (altitude == Double.NaN) {
+                        altitude = null;
+                    }
+                }
+            }
+        }
 
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
             // JSONObject containerObject = object.optJSONObject("name");
