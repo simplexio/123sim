@@ -239,6 +239,12 @@ public class OHAPParser {
 		}
 
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
+            JSONObject containerObject = object.optJSONObject("container");
+            Object obj = containerObject.opt("name");
+            if(obj instanceof String){
+                name = (String)  obj ;
+            }
+
 			Log.d(TAG, "Creating a parent: " + name
 					+ " and trying to parse children");
 			thisDevice = new DeviceContainer(null, name, null, description,
@@ -246,7 +252,13 @@ public class OHAPParser {
 			handleDevice(thisDevice, object);
 		} else if (deviceContainerType.equalsIgnoreCase(SENSOR)
 				|| deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
-			Log.d(TAG, "Creating a child: " + name);
+            JSONObject containerObject = object.optJSONObject("container");
+            Object obj = containerObject.opt("name");
+            if(obj instanceof String){
+                name = (String)  obj ;
+            }
+
+            Log.d(TAG, "Creating a child: " + name);
 
 			thisDevice = new ConcreteDevice(null, null, name, null,
 					description, null, null, value, value, value,
