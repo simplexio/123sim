@@ -239,21 +239,23 @@ public class OHAPParser {
 		}
 
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
-            JSONObject containerObject = object.optJSONObject("container");
-            Object obj = containerObject.opt("name");
+            // JSONObject containerObject = object.optJSONObject("name");
+
+            Object obj = object.opt("name");
             if(obj instanceof String){
                 name = (String)  obj ;
             }
 
-			Log.d(TAG, "Creating a parent: " + name
+
+            Log.d(TAG, "Creating a parent: " + name
 					+ " and trying to parse children");
 			thisDevice = new DeviceContainer(null, name, null, description,
 					null);
 			handleDevice(thisDevice, object);
 		} else if (deviceContainerType.equalsIgnoreCase(SENSOR)
 				|| deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
-            JSONObject containerObject = object.optJSONObject("container");
-            Object obj = containerObject.opt("name");
+
+            Object obj = object.opt("name");
             if(obj instanceof String){
                 name = (String)  obj ;
             }
