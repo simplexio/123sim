@@ -58,6 +58,8 @@ public class DeviceListActivity extends ListActivity implements HomeControlServi
 		super.onListItemClick(l, v, position, id);
 		AbstractDevice device = (AbstractDevice)DeviceAdapter.getInstance().getItem(position);
 		if (null != device) {
+            // TODO: DeviceActivy.java pitäs käynnistyä tästä ? ei käynnisty
+            // onCreateOptionsMenu käynnistyy muttei OnCreate DeviceActivity koodissa
 			Intent intent = new Intent(this, DeviceActivity.class);
 			intent.putExtra(DeviceActivity.KEY_DEVICE_ID, device.getId());
 			this.startActivity(intent);
