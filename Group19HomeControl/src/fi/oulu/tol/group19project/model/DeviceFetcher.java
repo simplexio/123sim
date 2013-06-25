@@ -59,7 +59,7 @@ public class DeviceFetcher implements Visitor {
 	public AbstractDevice fetchChildDevice(AbstractDevice fromDevice, int index) {
 		targetDeviceIndex = index;
 		currentDeviceIndex = -1;
-		foundDevice = null;
+        foundDevice = null;
 		deviceId = null;
 		
 		fromDevice.accept(this);

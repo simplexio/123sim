@@ -290,7 +290,7 @@ public class OHAPParser {
 
 		if (deviceContainerType.equalsIgnoreCase(CONTAINER)) {
             // JSONObject containerObject = object.optJSONObject("name");
-
+            type = "container" ;
             Object obj = object.opt("name");
             if(obj instanceof String){
                 name = (String)  obj ;
@@ -309,6 +309,12 @@ public class OHAPParser {
 			handleDevice(thisDevice, object);
 		} else if (deviceContainerType.equalsIgnoreCase(SENSOR)
 				|| deviceContainerType.equalsIgnoreCase(ACTUATOR)) {
+            if(deviceContainerType.equalsIgnoreCase(SENSOR)){
+                type = "sensor" ;
+            }
+            if (deviceContainerType.equalsIgnoreCase(ACTUATOR)){
+                type = "sensor" ;
+            }
 
             Object obj = object.opt("name");
             if(obj instanceof String){

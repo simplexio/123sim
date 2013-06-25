@@ -143,6 +143,8 @@ public class HomeControlService extends Service implements OHAPListener{
 						devices.updateValues(newData);
                         }
 					}
+
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
